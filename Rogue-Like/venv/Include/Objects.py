@@ -1,5 +1,5 @@
 
-class Objects():
+class Item():
     def __init__(self, nom, gold_price):
         self.name = nom
         self.price = gold_price
@@ -7,9 +7,9 @@ class Objects():
     def get_name(self):
         return self.name
 
-class Equipments(Objects):
+class Equipments(Item):
     def __init__(self, nom, gold_price, min_lvl):
-        Objects.__init__(self, nom, gold_price)
+        Item.__init__(self, nom, gold_price)
         self.lvl = min_lvl
         self.slot = -1
 
@@ -45,7 +45,7 @@ class Armor(Equipments):
 
 
 
-class Jevels(Equipments):
+class Jewels(Equipments):
     def __init__(self, nom, gold_price, min_lvl, new_power, carac_bonus):
         Equipments.__init__(self,nom,gold_price,min_lvl)
         self.power_bonus = new_power

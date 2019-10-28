@@ -5,8 +5,17 @@ from Include.Character import *
 def run():
 
     joueur = Joueur("Martin")
+    joueur.addExp(3000000)
 
+    joueur.stat.mons_killed(123)
+    joueur.stat.new_game()
+    joueur.stat.game_finish()
+    joueur.stat.biome_found()
+    joueur.stat.new_weapon()
+    joueur.stat.new_armor()
+    print(joueur)
 
+    """
     arme = Weapon("Massue",14,1,25,[])
     arme2 = Weapon("Massue sacrée",14,1,25,[])
 
@@ -21,7 +30,7 @@ def run():
     joueur.inventory.equip_armor(liste_armure)
 
     joueur.inventory.weapon_equiped()
-
+    """
 
     return 0
 
