@@ -118,7 +118,7 @@ class Map():
 
         else:
             for j in range(0, len(self.Rooms[self.PlayerPosition].get_NextRooms())):
-                pass #Display the message associatedd to each path and ask the player to make a choice
+                pass #Display the message associated to each path and ask the player to make a choice
 
 
         
