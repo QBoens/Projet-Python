@@ -1,8 +1,8 @@
 import random
 import json
 
-SAVING_PATH = "../Saving/"
-INTRODUCTIONLINES_PATH = "../IntroductionLines/"
+SAVING_PATH = "../Save/"
+INTRODUCTIONLINES_PATH = "../IntroductionLine/"
 
 class Room():
     def __init__(self, ID,Character,Activable,IntroductionLine):
@@ -67,13 +67,12 @@ class Map():
             else:
                 altLength.append(0)
             if(i != depth -1):
-                self.Rooms.append(Room(i,"","","example"))
+                self.Rooms.append(Room(i,"","","example")) #A modifier en fonction de la salle
             else:
-                self.Rooms.append(Room(i,"","","example"))
+                self.Rooms.append(Room(i,"","","example")) #A modifier en fonction de la salle
             if(i != 0):
                 self.Rooms[i-1].Add_NextRoom([self.Rooms[i].get_ID(),"ALways Left"])
         
-        #print(altLength)
         self.StartingRoom = 0 
         self.PlayerPosition = self.StartingRoom
         self.Save()
