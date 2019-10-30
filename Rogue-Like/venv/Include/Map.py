@@ -2,6 +2,7 @@ import random
 import json
 
 SAVING_PATH = "../Saving/"
+INTRODUCTIONLINES_PATH = "../IntroductionLines/"
 
 class Room():
     def __init__(self, ID,Character,Activable,IntroductionLine):
@@ -36,8 +37,10 @@ class Room():
     
 
     #Display the intro sentence of the room
-    def Introduce(self,Player):
-        pass
+    def Introduce(self):
+        f = open(INTRODUCTIONLINES_PATH+self.IntroductionLine+'.json')
+        js = json.load(f)
+        print(js["IntroductionLine"])
     #Activate the activable
     def Activate(self,Player):
         pass
@@ -64,13 +67,13 @@ class Map():
             else:
                 altLength.append(0)
             if(i != depth -1):
-                self.Rooms.append(Room(i,"","",""))
+                self.Rooms.append(Room(i,"","","example"))
             else:
-                self.Rooms.append(Room(i,"","",""))
+                self.Rooms.append(Room(i,"","","example"))
             if(i != 0):
-                self.Rooms[i-1].Add_NextRoom([self.Rooms[i].get_ID(),"Chemin1"])
+                self.Rooms[i-1].Add_NextRoom([self.Rooms[i].get_ID(),"ALways Left"])
         
-        print(altLength)
+        #print(altLength)
         self.StartingRoom = 0 
         self.PlayerPosition = self.StartingRoom
         self.Save()
@@ -79,15 +82,19 @@ class Map():
     def Load(self):
         f = open(SAVING_PATH+'map.json')
         js = json.load(f)
+        self.StartingRoom = js["StartingRoom"]
+        self.PlayerPosition = js["PlayerPosition"]
         self.Rooms = []
         for i in range(0,len(js["Rooms"])):
-            self.Rooms.append(js["Rooms"][i]["ID"], js["Rooms"][i]["Character"], js["Rooms"][i]["Activable"], js["Rooms"][i]["IntroductionLine"])
+            self.Rooms.append(Room(js["Rooms"][i]["ID"], js["Rooms"][i]["Character"], js["Rooms"][i]["Activable"], js["Rooms"][i]["IntroductionLine"]))
             self.Rooms[i].Set_NextRooms(js["Rooms"][i]["NextRooms"])
 
     #Save the map in a Json file
     def Save(self):
         #TO ADD: Call a function in player to save his stat and objects
-        js = {"Rooms":[]}
+        js = {"StartingRoom" : 0, "PlayerPosition" : 0, "Rooms":[]}
+        js["StartingRoom"] = self.StartingRoom
+        js["PlayerPosition"] = self.PlayerPosition
         for a in range(0,len(self.Rooms)):
             tmp = {}
             tmp["ID"] = self.Rooms[a].get_ID()
@@ -123,7 +130,8 @@ class Map():
 
         
 
-#if __name__ == "__main__":
-    #map = Map("test")
+if __name__ == "__main__":
+    map = Map("test")
     #map.Generate()
-    #map.Load()
+    map.Load()
+    map.Play()
