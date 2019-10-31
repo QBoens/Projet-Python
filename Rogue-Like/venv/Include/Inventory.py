@@ -31,7 +31,7 @@ class Inventory():
                             print("Ce choix n'est pas valide")
 
                         elif(replace == "o"):
-                            self.list_objects.append(self.slot_weapon[1])
+                            self.add_object(self.slot_weapon[1])
                             self.slot_weapon[1] = weapon
                             print("Arme équipée main droite :", weapon.name)
                             choix_valide = True
@@ -60,7 +60,7 @@ class Inventory():
                             print("Ce choix n'est pas valide")
 
                         elif(replace == "o"):
-                            self.list_objects.append(self.slot_weapon[0])
+                            self.add_object(self.slot_weapon[1])
                             self.slot_weapon[0] = weapon
                             print("Arme équipée main gauche :", weapon.name)
                             choix_valide = True
@@ -70,14 +70,16 @@ class Inventory():
         else:
             self.slot_weapon[0] = weapon
 
-
+    def add_object(self, object):
+        self.list_objects.append(object)
 
     def get_gold(self):
         return self.amount_gold
 
     def add_gold(self, quantity):
         self.amount_gold += quantity
-        print("Vous avez maintenant :", self.get_gold(),"gold")
+        if(type(self.proprio).__name__ == 'Joueur'):
+            print("Vous avez maintenant :", self.get_gold(),"gold")
 
     def can_spend(self, quantity):
         if(quantity <= self.amount_gold):
@@ -122,3 +124,13 @@ class Inventory():
         print("Armes équipées :")
         print("\tMain gauche : ", self.slot_weapon[0].get_name())
         print("\tMain droite : ", self.slot_weapon[1].get_name())
+
+    def sell_object(self, object):
+        self.list_objects.remove(object)
+        print("Vous avez vendu :",object)
+        self.add_gold(object.price)
+
+    def list_of_objects(self):
+        print("Liste des objets :")
+        for object in self.list_objects:
+            print(object)

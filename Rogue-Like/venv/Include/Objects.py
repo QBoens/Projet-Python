@@ -1,3 +1,4 @@
+from random import randint
 
 class Item():
     def __init__(self, nom, gold_price):
@@ -44,9 +45,32 @@ class Armor(Equipments):
         return texte
 
 
-
 class Jewels(Equipments):
     def __init__(self, nom, gold_price, min_lvl, new_power, carac_bonus):
         Equipments.__init__(self,nom,gold_price,min_lvl)
         self.power_bonus = new_power
         self.car_bonus = carac_bonus
+
+
+
+
+class Consomables(Item):
+    def __init__(self, nom, gold_price):
+        Item.__init__(self, nom, gold_price)
+
+    def __str__(self):
+        return self.name
+
+class Potion(Consomables):
+    def __init__(self,  nom, gold_price, joueur):
+        Consomables.__init__(self, nom, gold_price)
+
+        list_of_stat = ["HP","MP","dodge","parry"]
+        stat_index = randint(0, len(list_of_stat) - 1)
+        self.stat = list_of_stat[stat_index]
+        self.value = 30
+
+
+
+    def set_value(self, joueur):
+        return 0

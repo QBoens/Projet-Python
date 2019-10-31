@@ -1,12 +1,15 @@
 from Include.Inventory import *
+from Include.Objects import *
 
 from random import randint
+
+import configparser
 
 class Character():
     def __init__(self, nom):
         self.nom = nom
         self.inventory = Inventory(self)
-        self.stat = Statistic()
+        self.stat = Statistic(type(self).__name__)
 
     def take_dmg(self, degats):
         self.stat.HP -= degats
@@ -64,11 +67,30 @@ class Character():
         return self.stat.level
 
     def __str__(self):
+
         texte = "Nom :\t\t\t\t\t\t\t" + self.nom
         texte += "\nLevel :\t\t\t\t\t\t\t" + str(self.stat.level)
         texte += "\nType :\t\t\t\t\t\t\t" + type(self).__name__ + '\n'
         texte += str(self.stat)
+
         return texte
+
+    def set_stat(self, section):
+        config = configparser.ConfigParser()
+        config.read('Fichier_conf.ini')
+        list_attr = self.stat.__dict__.items()
+
+        for attr in list_attr:
+            if (attr[0] == "xpBar"):
+                self.stat.__setattr__(attr[0], int(config.get(section, attr[0])))
+                break
+
+            if(attr[0] != "damage"):
+                self.stat.__setattr__(attr[0],int(config.get(section,attr[0])))
+            else:
+                dmg_inf = int(config.get(section, 'damage_inf'))
+                dmg_sup = int(config.get(section, 'damage_sup'))
+                self.stat.__setattr__(attr[0], (dmg_inf, dmg_sup))
 
 class Joueur(Character):
     def __init__(self, name):
@@ -83,6 +105,36 @@ class Joueur(Character):
 
         self.stat.damage = (1,int(self.stat.damage[1] * (1+1/4)))
 
+    def use_consomable(self):
+        if(len(self.inventory.list_objects) == 0):
+            print("Il n'y a aucun objet dans votre inventaire")
+            return 0
+
+        consomables_lists = list()
+        id_conso = 0
+        for object in self.inventory.list_objects:
+            if(type(object).__name__ == "Potion" or type(object).__name__ == "Food"):
+                consomables_lists.append(object)
+
+        print("Voici la liste des consommables possibles :")
+        for conso in consomables_lists:
+            print(str(id_conso + 1), ' - ', conso)
+            id_conso += 1
+
+        choix_valide = False
+
+        while(not choix_valide):
+            print("Quel objet choisissez vous ?")
+            choix_joueur = input("Fournissez un numéro compris entre 1 et "+str(len(consomables_lists))+"\n")
+            choix_joueur = int(choix_joueur)
+            if(choix_joueur < 1 or len(consomables_lists) < choix_joueur):
+                print("Vous n'avez pas fournis une valeur utilisable")
+            else:
+                choix_valide = True
+
+        use_conso = consomables_lists[choix_joueur - 1]
+        print(use_conso.stat)
+        self.stat.__setattr__(use_conso.stat, self.stat.__getattribute__(use_conso.stat) + use_conso.value)
 
     def addExp(self,xpPoint):
 
@@ -97,13 +149,54 @@ class Joueur(Character):
 
 
 class Monster(Character):
-    def __init__(self, nom):
-        Character.__init__(self, nom)
+    def __init__(self, section):
+        '''Création de l'objet fichier.ini'''
+        config = configparser.ConfigParser()
+        config.read('Fichier_conf.ini')
 
+        Character.__init__(self, config.get(section,'nom'))
+        self.set_stat(section)
+        self.inventory.add_gold(randint(20,100))
 
+class Merchant(Character):
+    def __init__(self, section):
+        config = configparser.ConfigParser()
+        config.read('Fichier_conf.ini')
+
+        Character.__init__(self, config.get(section, 'nom'))
+        self.set_stat(section)
+        self.inventory.add_gold(5000)
+        self.init_list_objects()
+
+    def init_list_objects(self):
+        self.inventory.add_object("Epee 1")
+        self.inventory.add_object("Armure 1")
+        self.inventory.add_object("Potion 1")
+
+    def discute_client(self,joueur):
+        print("Bonjour bienvenu à mon échoppe")
+        print("Je possède les objets suivants :")
+        num_objet = 1
+        list_choice = ['1','2','3','quitter']
+        for items in self.inventory.list_objects:
+            print(num_objet, "-", items)
+            num_objet += 1
+
+        choix_valide = False
+        while(not choix_valide):
+            print("\nQuel objet voulez vous achetez?")
+            choix_joueur = input("Ecrivez le numéro de l'objet ou écrivez quitter si rien ne vous intéresse\n")
+            choix_joueur = choix_joueur.lower()
+            if(not list_choice.__contains__(choix_joueur)):
+                print("Ce n'est pas un choix valide")
+                continue
+
+            if(choix_joueur == "quitter"):
+                print("Au revoir")
+                break
 
 class Statistic():
-    def __init__(self):
+    def __init__(self,type_proprio):
         self.HP = 100
         self.MP = 100
         self.shield_point = 30
@@ -114,6 +207,7 @@ class Statistic():
         self.level = 1
         self.nextLevel = 10
         self.xpBar = self.nextLevel
+        self.bonus_stat = list()
         self.armor = 10
         self.games_finished = 0
         self.games_played = 0
@@ -121,6 +215,7 @@ class Statistic():
         self.mons_kills = 0
         self.weapon_found = 0
         self.armor_found = 0
+        self.type_proprio = type_proprio
 
     def __str__(self):
         texte = ""
@@ -129,16 +224,17 @@ class Statistic():
         texte += "\nShield points : \t\t\t\t" + str(self.shield_point)
         texte += "\nChance of dodging : \t\t\t" + str(self.dodge)
         texte += "\nChance of parry : \t\t\t\t" + str(self.parry)
-        texte += "\nChance of critical : \t\t\t" +  str(self.critical)
+        texte += "\nChance of critical : \t\t\t" + str(self.critical)
         texte += "\nRange of damages : \t\t\t\t[" + str(self.damage[0]) + '-' + str(self.damage[1]) + ']'
+        if(self.type_proprio == 'Joueur'):
+            texte += "\n\n<<<<<STATISTICS>>>>>\n\n"
+            texte += "Games played : \t\t\t" + str(self.games_played)
+            texte += "\nGames finished : \t\t" + str(self.games_finished)
+            texte += "\nBiome discovered : \t\t" + str(self.biome_disc)
+            texte += "\nMonster killed : \t\t" + str(self.mons_kills)
+            texte += "\nWeapon founded : \t\t" + str(self.weapon_found)
+            texte += "\nArmor founded : \t\t" + str(self.armor_found)
 
-        texte += "\n\n<<<<<STATISTICS>>>>>\n\n"
-        texte += "Games played : \t\t\t" + str(self.games_played)
-        texte += "\nGames finished : \t\t" + str(self.games_finished)
-        texte += "\nBiome discovered : \t\t" + str(self.biome_disc)
-        texte += "\nMonster killed : \t\t" + str(self.mons_kills)
-        texte += "\nWeapon founded : \t\t" + str(self.weapon_found)
-        texte += "\nArmor founded : \t\t" + str(self.armor_found)
         return texte
 
     def mons_killed(self,nb):
@@ -158,3 +254,9 @@ class Statistic():
 
     def new_armor(self):
         self.armor_found += 1
+
+    def add_bonus(self, stat, value):
+        if (len(self.bonus_stat) == 0):
+            self.bonus_stat.append((stat,value))
+        else :
+            return 0
