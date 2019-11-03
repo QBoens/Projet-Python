@@ -1,5 +1,6 @@
 from Include.Inventory import *
 from Include.Objects import *
+from Include.Spells import *
 
 from random import randint
 
@@ -75,9 +76,9 @@ class Character():
 
         return texte
 
-    def set_stat(self, section):
+    def set_stat(self, section, file):
         config = configparser.ConfigParser()
-        config.read('Fichier_conf.ini')
+        config.read(file)
         list_attr = self.stat.__dict__.items()
 
         for attr in list_attr:
@@ -95,6 +96,7 @@ class Character():
 class Joueur(Character):
     def __init__(self, name):
         Character.__init__(self, name)
+        self.spell_book = Spell_book()
 
     def newLevel(self):
         self.stat.HP +=  int(self.stat.HP / 5)
@@ -104,6 +106,8 @@ class Joueur(Character):
         self.stat.xpBar = self.stat.nextLevel
 
         self.stat.damage = (1,int(self.stat.damage[1] * (1+1/4)))
+
+        self.spell_book.new_level()
 
     def use_consomable(self):
         if(len(self.inventory.list_objects) == 0):
@@ -152,19 +156,18 @@ class Monster(Character):
     def __init__(self, section):
         '''Création de l'objet fichier.ini'''
         config = configparser.ConfigParser()
-        config.read('Fichier_conf.ini')
+        config.read('Monster/Fichier_conf_Mons.ini')
 
         Character.__init__(self, config.get(section,'nom'))
-        self.set_stat(section)
+        self.set_stat(section, 'Monster/Fichier_conf_Mons.ini')
         self.inventory.add_gold(randint(20,100))
 
 class Merchant(Character):
     def __init__(self, section):
         config = configparser.ConfigParser()
-        config.read('Fichier_conf.ini')
-
+        config.read("NPC/Fichier_conf_NPC.ini")
         Character.__init__(self, config.get(section, 'nom'))
-        self.set_stat(section)
+        self.set_stat(section, "NPC/Fichier_conf_NPC.ini")
         self.inventory.add_gold(5000)
         self.init_list_objects()
 

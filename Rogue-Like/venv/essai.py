@@ -1,6 +1,7 @@
 from Include.Inventory import *
 from Include.Objects import *
 from Include.Character import *
+from Include.Spells import *
 
 def run():
 
@@ -15,10 +16,14 @@ def run():
     joueur.inventory.sell_object(potion_MP)
     joueur.inventory.list_of_objects()
     '''
-    #monstre = Monster('Monstre1')
-
-    merchant = Merchant('Merchant1')
-    merchant.discute_client(joueur)
+    """
+    monstre = Monster('Monstre1')
+    print(monstre)
+    merchant = Merchant("Merchant1")
+    print(merchant)
+    #merchant.discute_client(joueur)
+    """
+    joueur.addExp(300000)
     return 0
 
 run()
