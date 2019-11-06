@@ -1,0 +1,11 @@
+{
+	"Boule de feu":
+	{
+		"degat" : 30 
+	},
+
+	"Eclair de givre":
+	{
+		"degat" :  25
+	}
+}

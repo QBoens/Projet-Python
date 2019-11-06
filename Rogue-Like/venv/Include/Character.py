@@ -4,7 +4,7 @@ from Include.Spells import *
 
 from random import randint
 
-import configparser
+import json
 
 class Character():
     def __init__(self, nom):
@@ -76,22 +76,7 @@ class Character():
 
         return texte
 
-    def set_stat(self, section, file):
-        config = configparser.ConfigParser()
-        config.read(file)
-        list_attr = self.stat.__dict__.items()
 
-        for attr in list_attr:
-            if (attr[0] == "xpBar"):
-                self.stat.__setattr__(attr[0], int(config.get(section, attr[0])))
-                break
-
-            if(attr[0] != "damage"):
-                self.stat.__setattr__(attr[0],int(config.get(section,attr[0])))
-            else:
-                dmg_inf = int(config.get(section, 'damage_inf'))
-                dmg_sup = int(config.get(section, 'damage_sup'))
-                self.stat.__setattr__(attr[0], (dmg_inf, dmg_sup))
 
 class Joueur(Character):
     def __init__(self, name):
@@ -105,6 +90,7 @@ class Joueur(Character):
         self.stat.nextLevel = 10 + pow(self.stat.level, 2) * 10
         self.stat.xpBar = self.stat.nextLevel
 
+        self.stat.shield_point += int(self.stat.shield_point / 4)
         self.stat.damage = (1,int(self.stat.damage[1] * (1+1/4)))
 
         self.spell_book.new_level()
@@ -155,12 +141,36 @@ class Joueur(Character):
 class Monster(Character):
     def __init__(self, section):
         '''Création de l'objet fichier.ini'''
-        config = configparser.ConfigParser()
-        config.read('Monster/Fichier_conf_Mons.ini')
 
-        Character.__init__(self, config.get(section,'nom'))
-        self.set_stat(section, 'Monster/Fichier_conf_Mons.ini')
+        Character.__init__(self, section)
+        self.set_stat(section)
         self.inventory.add_gold(randint(20,100))
+
+    def set_stat(self, section):
+        DATA_PATH = "Monster/"
+        file = open(DATA_PATH + "Data_monstre.json")
+        data = json.load(file)
+
+        list_attr = self.stat.__dict__.items()
+        for attr in list_attr:
+            if (attr[0] == "level"):
+                break
+
+            if(attr[0] != "damage"):
+                self.stat.__setattr__(attr[0], data[section][attr[0]])
+            else:
+                dmg_inf = data[section]["damage_inf"]
+                dmg_sup = data[section]["damage_sup"]
+                self.stat.__setattr__(attr[0], (dmg_inf, dmg_sup))
+
+    def set_level(self,joueur_level):
+        self.stat.level = joueur_level
+        for i in range(0, joueur_level):
+            self.stat.HP += int(self.stat.HP / 4)
+            self.stat.MP += int(self.stat.MP / 4)
+            self.stat.shield_point += int(self.stat.shield_point / 4)
+            self.stat.damage = (1, int(self.stat.damage[1] * (1.2)))
+
 
 class Merchant(Character):
     def __init__(self, section):

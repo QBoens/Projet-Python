@@ -1,50 +1,41 @@
-import configparser
+import json
 
 class Spell_book():
     def __init__(self):
         self.list_spells = list()
 
-        file = "Physical_attack/Fichier_conf_Phys.ini"
-        config = configparser.ConfigParser()
-        config.read(file)
-        list_Phys = config.sections()
+        SAVE_PATH = "Physical_attack/"
+        file = open(SAVE_PATH + "Data_attack_phy.json")
+        data = json.load(file)
+        for section in data:
+            self.list_spells.append(Physical(section,data[section]["degat"]))
 
-        file = "Magical_attack/Fichier_conf_Magic.ini"
-        config = configparser.ConfigParser()
-        config.read(file)
-        list_Mag = config.sections()
+        SAVE_PATH = "Magical_attack/"
+        file = open(SAVE_PATH + "Data_attack_mag.json")
+        data = json.load(file)
+        for section in data:
+            self.list_spells.append(Magical(section, data[section]["degat"]))
 
-        for section in list_Phys:
-            self.list_spells.append(Physical(section))
-
-        for section in list_Mag:
-            self.list_spells.append(Magical(section))
 
     def new_level(self):
         for spell in self.list_spells:
-            print(spell)
+            spell.dmg
+
+    def list_spells(self):
 
 
 class Spell():
     def __str__(self):
         texte = "Nom :\t\t" + self.name + "\nType :\t\t" + type(self).__name__
-        texte += "\nDégats :\t" + str(self.dmg) + "\nCible(s) :\t" + str(self.target)
+        texte += "\nDégats :\t" + str(self.dmg)
         return texte
 
 class Physical(Spell):
-    def __init__(self, section):
-        file = "Physical_attack/Fichier_conf_Phys.ini"
-        config = configparser.ConfigParser()
-        config.read(file)
-        self.name = config.get(section, 'nom')
-        self.dmg = config.get(section, 'dmg')
-        self.target = config.get(section, 'target')
+    def __init__(self, nom, degat):
+        self.name = nom
+        self.dmg = degat
 
 class Magical(Spell):
-    def __init__(self, section):
-        file = "Magical_attack/Fichier_conf_Magic.ini"
-        config = configparser.ConfigParser()
-        config.read(file)
-        self.name = config.get(section, 'nom')
-        self.dmg = config.get(section, 'dmg')
-        self.target = config.get(section, 'target')
+    def __init__(self, nom, degat):
+        self.name = nom
+        self.dmg = degat
