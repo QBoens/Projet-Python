@@ -9,27 +9,38 @@ import json
 
 def run():
     joueur = Joueur("Henri")
-    monstre = Monster("Fistiland")
-    print(joueur.spell_book.list_spells)
-    #joueur.spell_book.new_level()
-    '''
-    potion_sacre = Potion("Potion soin sacrée", 600, joueur)
-    potion_MP = Potion("Potion mana", 50, joueur)
+    monstre = Monster("Nouveau")
+    joueur.addExp(4000)
 
-    joueur.inventory.add_object(potion_MP)
-    joueur.inventory.add_object(potion_sacre)
-    joueur.inventory.list_of_objects()
-    joueur.inventory.sell_object(potion_MP)
-    joueur.inventory.list_of_objects()
-    '''
-    """
-    monstre = Monster('Monstre1')
-    print(monstre)
-    merchant = Merchant("Merchant1")
-    print(merchant)
-    #merchant.discute_client(joueur)
-    """
-    #joueur.addExp(300000)
+    armure = Armor()
+    armure2 = armure
+    armure.set_level(joueur.get_level())
+
+    arme = Weapon()
+    arme2 = Weapon()
+    arme2.set_level(joueur.get_level())
+
+    arme2.lvl = 1
+
+
+    Potion1 = Potion("Nouveau",12,joueur)
+    Potion2 = Potion("Nouveau", 12, joueur)
+    Potion3 = Potion("Nouveau", 12, joueur)
+
+    joueur.inventory.add_object(Potion1)
+    joueur.inventory.add_object(armure)
+
+    joueur.inventory.equip_armor(armure)
+    joueur.inventory.equip_armor(armure2)
+
+    joueur.inventory.add_object(arme)
+    joueur.inventory.add_object(arme2)
+
+    #joueur.inventory.equip_weapon_R(arme)
+    joueur.inventory.equip_weapon_G(arme2)
+
+    joueur.inventory.add_object(Potion3)
+    joueur.save()
     return 0
 
 run()

@@ -1,11 +1,27 @@
 {
-	"Boule de feu":
+	"Fireball":
 	{
-		"degat" : 30 
+		"degat" : 25, 
+		"MP_cost":10
 	},
 
-	"Eclair de givre":
+	"Lightning":
 	{
-		"degat" :  25
+		"degat" :  30,
+		"MP_cost":20
+	},
+
+	"Ice spear":
+	{
+		"degat" : 30,
+		"MP_cost":20
+	},
+
+	"Earth fist":
+	{
+		"degat" : 40,
+		"MP_cost":50
 	}
+
+
 }

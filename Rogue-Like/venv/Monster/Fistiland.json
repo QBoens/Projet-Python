@@ -1,0 +1,13 @@
+{
+	"Fistiland":
+	{
+		"HP":100,
+		"MP" : 100,
+		"shield_point" : 30,
+		"dodge" : 25,
+		"parry" : 25,
+		"critical" : 25,
+		"damage_inf" : 1,
+		"damage_sup" : 10
+	}
+}

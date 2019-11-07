@@ -1,0 +1,13 @@
+{
+	"Squelettor":
+	{
+		"HP":150,
+		"MP" : 50,
+		"shield_point" : 30,
+		"dodge" : 15,
+		"parry" : 40,
+		"critical" : 30,
+		"damage_inf" : 1,
+		"damage_sup" : 15
+	}
+}

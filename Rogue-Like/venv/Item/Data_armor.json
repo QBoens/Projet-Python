@@ -1,0 +1,107 @@
+{
+	"Leather helmet":
+	{
+		"gold_price":10,
+		"min_lvl":1,
+		"df_bonus":5,
+		"type":1
+	},
+	"Leather plastron":
+	{
+		"gold_price":10,
+		"min_lvl":1,
+		"df_bonus":5,
+		"type":2
+	},
+	"Leather pants":
+	{
+		"gold_price":10,
+		"min_lvl":1,
+		"df_bonus":5,
+		"type":3
+	},
+	"Leather glooves":
+	{
+		"gold_price":10,
+		"min_lvl":1,
+		"df_bonus":5,
+		"type":4
+	},
+	"Leather boots":
+	{
+		"gold_price":10,
+		"min_lvl":1,
+		"df_bonus":5,
+		"type":5
+	},
+	"Bronze helmet":
+	{
+		"gold_price":10,
+		"min_lvl":5,
+		"df_bonus":15,
+		"type":1
+	},
+	"Bronze plastron":
+	{
+		"gold_price":10,
+		"min_lvl":5,
+		"df_bonus":15,
+		"type":2
+	},
+	"Bronze pants":
+	{
+		"gold_price":10,
+		"min_lvl":5,
+		"df_bonus":15,
+		"type":3
+	},
+	"Bronze glooves":
+	{
+		"gold_price":10,
+		"min_lvl":5,
+		"df_bonus":15,
+		"type":4
+	},
+	"Bronze boots":
+	{
+		"gold_price":10,
+		"min_lvl":5,
+		"df_bonus":15,
+		"type":5
+	},
+	"Steel helmet":
+	{
+		"gold_price":10,
+		"min_lvl":10,
+		"df_bonus":30,
+		"type":1
+	},
+	"Steel plastron":
+	{
+		"gold_price":10,
+		"min_lvl":10,
+		"df_bonus":30,
+		"type":2
+	},
+	"Steel pants":
+	{
+		"gold_price":10,
+		"min_lvl":10,
+		"df_bonus":30,
+		"type":3
+	},
+	"Steel glooves":
+	{
+		"gold_price":10,
+		"min_lvl":10,
+		"df_bonus":30,
+		"type":4
+	},
+	"Steel boots":
+	{
+		"gold_price":10,
+		"min_lvl":10,
+		"df_bonus":30,
+		"type":5
+	}
+}
