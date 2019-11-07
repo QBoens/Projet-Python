@@ -1,5 +1,6 @@
 import random
 import json
+import os
 
 SAVING_PATH = "../Save/"
 INTRODUCTIONLINES_PATH = "../IntroductionLine/"
@@ -38,9 +39,7 @@ class Room():
 
     #Display the intro sentence of the room
     def Introduce(self):
-        f = open(INTRODUCTIONLINES_PATH+self.IntroductionLine+'.json')
-        js = json.load(f)
-        print(js["IntroductionLine"])
+        print(self.IntroductionLine)
     #Activate the activable
     def Activate(self,Player):
         pass
@@ -55,23 +54,42 @@ class Map():
         self.Rooms = [] #Array of rooms
         self.PlayerPosition = None
         self.StartingRoom = None #Index
+        self.Choices = [["Turn Left","Turn Right"],["Go upstair","Go downstair"]]
+        self.Choices2 = ["Continue to the next room","Open the door and continue the adventure"]
 
     #Generates the rooms
     def Generate(self):
-        altLength = []
-        depth = random.randint(3,10)
-        for i in range(0,depth):
-            another_path = random.randint(0,100)
-            if(another_path <= 30):
-                altLength.append(random.randint(0,depth-(i+1)))
-            else:
-                altLength.append(0)
-            if(i != depth -1):
-                self.Rooms.append(Room(i,"","","example")) #A modifier en fonction de la salle
-            else:
-                self.Rooms.append(Room(i,"","","example")) #A modifier en fonction de la salle
-            if(i != 0):
-                self.Rooms[i-1].Add_NextRoom([self.Rooms[i].get_ID(),"ALways Left"])
+        depth = random.randint(5,15)
+        intro_lines = []
+        f = open(INTRODUCTIONLINES_PATH+'Lines.json')
+        js = json.load(f)
+        for el in js:
+            intro_lines.append(el)
+        
+        buffer = [[0,depth]]
+        chance = 25
+        while(len(buffer) != 0):
+            for i in range(0,buffer[0][1]):
+                intro_line = intro_lines[random.randint(0,len(intro_lines)-1)]
+                self.Rooms.append(Room(i,"","",js[intro_line]["IntroductionLine"])) #TODO
+
+                if(i != buffer[0][1]-1):
+                    another_path = random.randint(0,100)
+                    if(another_path <= chance):
+                        buffer.append([len(self.Rooms)-1,random.randint(1,depth)])
+                if( len(self.Rooms)-1 != 0):
+                    if(i == 0):
+                        if( len(self.Rooms[buffer[0][0]].get_NextRooms()) == 0):
+                            self.Rooms[buffer[0][0]].Add_NextRoom([self.Rooms[len(self.Rooms)-1].get_ID(),random.randint(0,len(self.Choices)-1)])
+                        else:
+                            self.Rooms[buffer[0][0]].Add_NextRoom([self.Rooms[len(self.Rooms)-1].get_ID(),self.Rooms[buffer[0][0]].get_NextRooms()[0][1]])
+                    else:
+                        if(len(self.Rooms[len(self.Rooms)-2].get_NextRooms()) == 0 ):
+                            self.Rooms[len(self.Rooms)-2].Add_NextRoom([self.Rooms[len(self.Rooms)-1].get_ID(),random.randint(0,len(self.Choices)-1)])
+                        else:
+                            self.Rooms[len(self.Rooms)-2].Add_NextRoom([self.Rooms[len(self.Rooms)-1].get_ID(),self.Rooms[len(self.Rooms)-2].get_NextRooms()[0][1]])
+            buffer.pop(0)
+            chance -= 1
         
         self.StartingRoom = 0 
         self.PlayerPosition = self.StartingRoom
@@ -120,17 +138,23 @@ class Map():
         #TO ADD: Ask the player if it want to save and quit or continue
 
         if len(self.Rooms[self.PlayerPosition].get_NextRooms()) == 0:
-            return True #Check if the dungeon is finished 
+            pass #Check if the dungeon is finished
 
         else:
-            for j in range(0, len(self.Rooms[self.PlayerPosition].get_NextRooms())):
-                pass #Display the message associated to each path and ask the player to make a choice
-
-
+            if(len(self.Rooms[self.PlayerPosition].get_NextRooms()) == 2):
+                t = random.randint(0,1)
+                print("1: "+str(self.Choices[self.Rooms[self.PlayerPosition].get_NextRooms()[0][1]][0]))
+                print("2: "+str(self.Choices[self.Rooms[self.PlayerPosition].get_NextRooms()[0][1]][1]))
+                if( t == 0):
+                    pass
+                else:
+                    pass
+            else:
+                print("1: "+str(self.Choices2[self.Rooms[self.PlayerPosition].get_NextRooms()[0][1]]))
         
 
 if __name__ == "__main__":
     map = Map("test")
-    #map.Generate()
+    map.Generate()
     map.Load()
     map.Play()
