@@ -1,5 +1,7 @@
 import json
 
+from Include.Objects import *
+
 class Inventory():
     def __init__(self, proprio):
         self.proprio = proprio
@@ -17,16 +19,61 @@ class Inventory():
         self.slot_weapon = [0,0]
 
     def save(self):
-        data = {"objet":self.save_list(),"weapon":self.save_weapon(),"armor":{}}
+        data = {"objet":self.save_list(),"weapon":self.save_weapon(),"armor":self.save_armor()}
         SAVE_PATH = "Save/"
         file = open(SAVE_PATH + "inventory.json", 'w')
         json.dump(data, file)
+
+    def load(self):
+        DATA_PATH = "Save/"
+        file = open(DATA_PATH + "inventory.json", 'r')
+        data = json.load(file)
+
+        for elem in data:
+
+            if elem == "objet":
+                for objet_name in data[elem]:
+                    if(data[elem][objet_name]["Classe"] == "Potion"):
+                        objet = Potion("Nom",0,self.proprio)
+                        objet.load(objet_name,data[elem][objet_name])
+                        objet.set_value(self.proprio)
+                        self.add_object(objet)
+                    elif (data[elem][objet_name]["Classe"] == "Armor"):
+                        objet = Armor()
+                        objet.load(objet_name,data[elem][objet_name])
+                        objet.set_level(self.proprio.stat.level)
+                        self.add_object(objet)
+                    elif (data[elem][objet_name]["Classe"] == "Weapon"):
+                        objet = Weapon()
+                        objet.load(objet_name,data[elem][objet_name])
+                        objet.set_level(self.proprio.stat.level)
+                        self.add_object(objet)
+
+            elif elem == "weapon":
+                indice = 0
+                for weapon_name in data[elem]:
+                    print(weapon_name)
+
+                    if(data[elem][weapon_name]==0):
+                        self.slot_weapon[indice] = 0
+                    else:
+                        weapon = Weapon()
+
+                        weapon.load(weapon_name,data[elem][weapon_name])
+                        weapon.set_level(self.proprio.stat.level)
+                        self.slot_weapon[indice] = weapon
+                    indice += 1
+
+            elif elem == "armor":
+                for armor_name in data[elem]:
+                    armor = Armor()
+                    armor.load(armor_name,data[elem][armor_name])
+                    self.equip_armor(armor)
 
     def save_weapon(self):
         data_weapon_equip={}
         indice_weapon = 0
         for weapon in self.list_equiped_weapon():
-            print(weapon)
             if(weapon != 0):
                 data_weapon_equip[weapon.name] = weapon.save()
             else:
@@ -37,15 +84,25 @@ class Inventory():
             indice_weapon +=1
         return data_weapon_equip
 
+    def save_armor(self):
+        data_armor_equiped = {}
+        for armor in self.list_equiped_armor():
+            data_armor_equiped[armor.name] = armor.save()
+        return data_armor_equiped
+
+    def list_equiped_armor(self):
+        list_equip = list()
+
+        for armor in self.slot_armor:
+            if(self.slot_armor[armor]!="aucune"):
+                list_equip.append(self.slot_armor[armor])
+
+        return list_equip
+
     def save_list(self):
         data_all_objects = {}
 
         for objet in self.list_objects:
-            '''data_object = {}
-            for attr in objet.__dict__.keys():
-                if (attr !="name"):
-                    data_object[attr] = objet.__getattribute__(attr)'''
-
             data_all_objects[objet.name] = objet.save()
 
         return data_all_objects
@@ -55,7 +112,7 @@ class Inventory():
             if self.can_equip(weapon):
                 if self.slot_weapon[1] == 0:
                     self.slot_weapon[1] = weapon
-                    print("Right hand's weaopn:", weapon.name)
+                    print("Right hand's weapon:", weapon.name)
                 else:
                     choix_valide = False
                     texte = "Do you want to change your right hand's weapon ?"
@@ -84,7 +141,7 @@ class Inventory():
             if self.can_equip(weapon):
                 if self.slot_weapon[0] == 0:
                     self.slot_weapon[0] = weapon
-                    print("Left hand's weaopn :", weapon.name)
+                    print("Left hand's weapon :", weapon.name)
                 else:
                     choix_valide = False
                     texte = "Do you want to change your left hand's weapon ?"
@@ -181,8 +238,9 @@ class Inventory():
 
     def weapon_equiped(self):
         print("Equiped weapons :")
-        print("\tLeft Hand : ", self.slot_weapon[0].get_name())
-        print("\tRight Hand : ", self.slot_weapon[1].get_name())
+
+        print("\tLeft Hand : ", self.slot_weapon[0])
+        print("\tRight Hand : ", self.slot_weapon[1])
 
     def sell_object(self, object):
         self.list_objects.remove(object)

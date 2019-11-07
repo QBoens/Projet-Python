@@ -100,6 +100,7 @@ class Joueur(Character):
         data = json.load(file)
         self.nom = data["nom"]
         self.stat.load(data["stat"])
+        self.inventory.load()
 
 
     def newLevel(self):

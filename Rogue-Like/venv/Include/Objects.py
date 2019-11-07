@@ -13,13 +13,14 @@ class Item():
         for attr in self.__dict__.keys():
             if(attr != 'name'):
                 data[attr] = self.__getattribute__(attr)
-
+        data["Classe"] = type(self).__name__
         return data
 
     def load(self,nom,data):
         self.name = nom
         for attr in self.__dict__.keys():
-            self.__setattr__(attr,data[attr])
+            if attr != 'name':
+                self.__setattr__(attr,data[attr])
 
 class Equipments(Item):
     def __init__(self, nom, gold_price, min_lvl):
