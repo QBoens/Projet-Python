@@ -14,20 +14,26 @@ class Spell_book():
         file = open(SAVE_PATH + "Data_attack_mag.json")
         data = json.load(file)
         for section in data:
-            self.list_spells.append(Magical(section, data[section]["degat"]))
+            self.list_spells.append(Magical(section, data[section]["degat"], data[section]["MP_cost"]))
 
 
     def new_level(self):
         for spell in self.list_spells:
-            spell.dmg
+            spell.dmg = int(spell.dmg * 1.4)
+            if(type(spell).__name__ == "Magical"):
+                spell.MP_cost = int(spell.MP_cost * 1.6)
 
-    def list_spells(self):
+    def list_of_spells(self):
+        for spell in self.list_spells:
+            print(spell,end='\n\n')
 
 
 class Spell():
     def __str__(self):
-        texte = "Nom :\t\t" + self.name + "\nType :\t\t" + type(self).__name__
-        texte += "\nDégats :\t" + str(self.dmg)
+        texte = "Name :\t\t" + self.name + "\nType :\t\t" + type(self).__name__
+        texte += "\nDamage :\t" + str(self.dmg)
+        if(type(self).__name__ == "Magical"):
+            texte +="\nMP cost :\t" + str(self.MP_cost)
         return texte
 
 class Physical(Spell):
@@ -35,7 +41,9 @@ class Physical(Spell):
         self.name = nom
         self.dmg = degat
 
+
 class Magical(Spell):
-    def __init__(self, nom, degat):
+    def __init__(self, nom, degat, cost):
         self.name = nom
         self.dmg = degat
+        self.MP_cost = cost

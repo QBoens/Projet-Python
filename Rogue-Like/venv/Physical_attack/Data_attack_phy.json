@@ -7,5 +7,14 @@
 	"Pointe":
 	{
 		"degat" : 30 
+	},
+	"Estoc":
+	{
+		"degat" : 25
+	},
+	"Frappe rapide":
+	{
+		"degat" : 15
 	}
+
 }

@@ -1,7 +1,7 @@
 from Include.Inventory import *
 from Include.Objects import *
 from Include.Spells import *
-
+from os import listdir
 from random import randint
 
 import json
@@ -11,6 +11,9 @@ class Character():
         self.nom = nom
         self.inventory = Inventory(self)
         self.stat = Statistic(type(self).__name__)
+
+    def get_level(self):
+        return self.stat.level
 
     def take_dmg(self, degats):
         self.stat.HP -= degats
@@ -33,7 +36,7 @@ class Character():
 
         if not cible.can_avoid():
             if not cible.can_parry():
-                degat = randin(self.stat.damage[0], self.stat.damage[1])
+                degat = randint(self.stat.damage[0], self.stat.damage[1])
 
                 degat += deg_weapon
                 if self.is_critic():
@@ -80,49 +83,64 @@ class Character():
 
 class Joueur(Character):
     def __init__(self, name):
-        Character.__init__(self, name)
+        super().__init__(name)
         self.spell_book = Spell_book()
 
-    def newLevel(self):
-        self.stat.HP +=  int(self.stat.HP / 5)
-        self.stat.MP += int(self.stat.MP / 5)
-        self.stat.level += 1
-        self.stat.nextLevel = 10 + pow(self.stat.level, 2) * 10
-        self.stat.xpBar = self.stat.nextLevel
+    def save(self):
+        data={"nom":self.nom,"stat":self.stat.save()}
+        self.inventory.save()
+        SAVE_PATH = "Save/"
+        file = open(SAVE_PATH+"player.json",'w')
+        json.dump(data,file)
 
-        self.stat.shield_point += int(self.stat.shield_point / 4)
-        self.stat.damage = (1,int(self.stat.damage[1] * (1+1/4)))
+    def load(self):
+
+        DATA_PATH = "Save/"
+        file = open(DATA_PATH+"player.json",'r')
+        data = json.load(file)
+        self.nom = data["nom"]
+        self.stat.load(data["stat"])
+
+
+    def newLevel(self):
+        self.stat.HP =  int(self.stat.HP * 1.6)
+        self.stat.MP = int(self.stat.MP * 1.6)
+        self.stat.level += 1
+        self.stat.nextLevel = pow(self.stat.level, 2) * 10
+        self.stat.xpBar = self.stat.nextLevel
+        self.stat.shield_point = int(self.stat.shield_point * 1.5)
+        self.stat.damage = (1,int(self.stat.damage[1] * 1.6))
 
         self.spell_book.new_level()
 
-    def use_consomable(self):
+    def use_consumable(self):
         if(len(self.inventory.list_objects) == 0):
-            print("Il n'y a aucun objet dans votre inventaire")
+            print("You don't have anything in your inventory")
             return 0
 
-        consomables_lists = list()
+        consumables_lists = list()
         id_conso = 0
         for object in self.inventory.list_objects:
             if(type(object).__name__ == "Potion" or type(object).__name__ == "Food"):
-                consomables_lists.append(object)
+                consumables_lists.append(object)
 
-        print("Voici la liste des consommables possibles :")
-        for conso in consomables_lists:
+        print("Here is the list of consumables :")
+        for conso in consumables_lists:
             print(str(id_conso + 1), ' - ', conso)
             id_conso += 1
 
         choix_valide = False
 
         while(not choix_valide):
-            print("Quel objet choisissez vous ?")
-            choix_joueur = input("Fournissez un numéro compris entre 1 et "+str(len(consomables_lists))+"\n")
+            print("Which object do you choose ?")
+            choix_joueur = input("Give a number between 1 and "+str(len(consumables_lists))+"\n")
             choix_joueur = int(choix_joueur)
-            if(choix_joueur < 1 or len(consomables_lists) < choix_joueur):
-                print("Vous n'avez pas fournis une valeur utilisable")
+            if(choix_joueur < 1 or len(consumables_lists) < choix_joueur):
+                print("You didn't write an authorized value")
             else:
                 choix_valide = True
 
-        use_conso = consomables_lists[choix_joueur - 1]
+        use_conso = consumables_lists[choix_joueur - 1]
         print(use_conso.stat)
         self.stat.__setattr__(use_conso.stat, self.stat.__getattribute__(use_conso.stat) + use_conso.value)
 
@@ -142,14 +160,37 @@ class Monster(Character):
     def __init__(self, section):
         '''Création de l'objet fichier.ini'''
 
-        Character.__init__(self, section)
-        self.set_stat(section)
+        super().__init__( section)
+        self.set_stat()
         self.inventory.add_gold(randint(20,100))
 
-    def set_stat(self, section):
+    def add_loot(self):
+        for i in range(0, self.get_level()):
+            self.inventory.add_gold(randint(20, 100))
+
+        equip_number = randint(1,3)
+        for i in range(0,equip_number):
+            type_equip = randint(1,4)
+            if(type_equip == 1):
+                object = Weapon()
+            else:
+                object = Armor()
+            object.set_level(self.get_level())
+            self.inventory.add_object(object)
+
+
+    def set_stat(self):
         DATA_PATH = "Monster/"
         file = open(DATA_PATH + "Data_monstre.json")
         data = json.load(file)
+
+        list_monsters = list()
+        for monstre in data:
+            list_monsters.append(monstre)
+
+        monster_choice = randint(0,len(list_monsters) - 1)
+
+        self.nom = list_monsters[monster_choice]
 
         list_attr = self.stat.__dict__.items()
         for attr in list_attr:
@@ -157,34 +198,29 @@ class Monster(Character):
                 break
 
             if(attr[0] != "damage"):
-                self.stat.__setattr__(attr[0], data[section][attr[0]])
+                self.stat.__setattr__(attr[0], data[list_monsters[monster_choice]][attr[0]])
             else:
-                dmg_inf = data[section]["damage_inf"]
-                dmg_sup = data[section]["damage_sup"]
+                dmg_inf = data[list_monsters[monster_choice]]["damage_inf"]
+                dmg_sup = data[list_monsters[monster_choice]]["damage_sup"]
                 self.stat.__setattr__(attr[0], (dmg_inf, dmg_sup))
 
     def set_level(self,joueur_level):
         self.stat.level = joueur_level
         for i in range(0, joueur_level):
-            self.stat.HP += int(self.stat.HP / 4)
-            self.stat.MP += int(self.stat.MP / 4)
+            self.stat.HP = int(self.stat.HP * 1.6)
+            self.stat.MP = int(self.stat.MP * 1.4)
             self.stat.shield_point += int(self.stat.shield_point / 4)
-            self.stat.damage = (1, int(self.stat.damage[1] * (1.2)))
+            self.stat.damage = (1, int(self.stat.damage[1] * (1.6)))
 
 
 class Merchant(Character):
     def __init__(self, section):
         config = configparser.ConfigParser()
         config.read("NPC/Fichier_conf_NPC.ini")
-        Character.__init__(self, config.get(section, 'nom'))
+        super().__init__( config.get(section, 'nom'))
         self.set_stat(section, "NPC/Fichier_conf_NPC.ini")
         self.inventory.add_gold(5000)
         self.init_list_objects()
-
-    def init_list_objects(self):
-        self.inventory.add_object("Epee 1")
-        self.inventory.add_object("Armure 1")
-        self.inventory.add_object("Potion 1")
 
     def discute_client(self,joueur):
         print("Bonjour bienvenu à mon échoppe")
@@ -229,6 +265,19 @@ class Statistic():
         self.weapon_found = 0
         self.armor_found = 0
         self.type_proprio = type_proprio
+
+    def save(self):
+        data ={}
+        for attr in self.__dict__.keys():
+            data[attr] = self.__getattribute__(attr)
+        return data
+
+    def load(self, data):
+        for attr in self.__dict__.keys():
+            self.__setattr__(attr,data[attr])
+
+
+
 
     def __str__(self):
         texte = ""

@@ -1,0 +1,13 @@
+{
+	"Slime":
+	{
+		"HP":75,
+		"MP" : 150,
+		"shield_point" : 15,
+		"dodge" : 50,
+		"parry" : 15,
+		"critical" : 15,
+		"damage_inf" : 1,
+		"damage_sup" : 20
+	}
+}
