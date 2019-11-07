@@ -4,5 +4,8 @@
     },
     "intro#2":{
         "IntroductionLine": "Behind the open door you see a strange laboratory"
+    },
+    "intro#3":{
+        "IntroductionLine": "Entering the room you are amazed by the architecture"
     }
 }

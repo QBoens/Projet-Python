@@ -39,7 +39,7 @@ class Room():
 
     #Display the intro sentence of the room
     def Introduce(self):
-        print(self.IntroductionLine)
+        print(self.IntroductionLine+"\n")
     #Activate the activable
     def Activate(self,Player):
         pass
@@ -65,7 +65,6 @@ class Map():
         js = json.load(f)
         for el in js:
             intro_lines.append(el)
-        
         buffer = [[0,depth]]
         chance = 25
         while(len(buffer) != 0):
@@ -97,7 +96,10 @@ class Map():
 
     #Load the map
     def Load(self):
-        f = open(SAVING_PATH+'map.json')
+        if(os.path.exists(SAVING_PATH+'map.json')):
+            f = open(SAVING_PATH+'map.json')
+        else:
+            return False
         js = json.load(f)
         self.StartingRoom = js["StartingRoom"]
         self.PlayerPosition = js["PlayerPosition"]
@@ -105,7 +107,7 @@ class Map():
         for i in range(0,len(js["Rooms"])):
             self.Rooms.append(Room(js["Rooms"][i]["ID"], js["Rooms"][i]["Character"], js["Rooms"][i]["Activable"], js["Rooms"][i]["IntroductionLine"]))
             self.Rooms[i].Set_NextRooms(js["Rooms"][i]["NextRooms"])
-
+        return True
     #Save the map in a Json file
     def Save(self):
         #TO ADD: Call a function in player to save his stat and objects
@@ -126,35 +128,51 @@ class Map():
     
     #Run the game
     def Play(self):
-        self.Rooms[self.PlayerPosition].Introduce() #Display the intro line of the room
-        if(self.Rooms[self.PlayerPosition].get_Character() != ""):
-            pass #Combat ou Marchand
+        is_end = False
+        Input = ""
+        while(is_end == False):
+            os.system("cls")
+            self.Rooms[self.PlayerPosition].Introduce()
 
-        #TO ADD: Ask the player if it want to save and quit or continue
+            if(self.Rooms[self.PlayerPosition].get_Character() != ""):
+                print("A MONSTER HAS APPEARED\n")
+                print("What do you want to do?\n\n1: Fight\n2: Inventory\n3: Move to the next room\n4: Exit game") #Combat ou Marchand
+            else:
+                print("What do you want to do?\n\n1: Inventory\n2: Move to the next room\n3: Exit game")
+                while(Input != "2" and Input != "3"):
+                    Input = input()
+                    if(Input == "1"):
+                        os.system("cls")
+                        print("THIS IS THE INVENTORY")
+                    else:
+                        os.system("cls")
+                        print("1: Inventory\n2: Move to the next room\n3: Exit game")
+                if(Input == "3"):
+                    break
+                Input = ""
+            
+            #TODO: Ask the player if it want to save and quit or continue
 
-        if(self.Rooms[self.PlayerPosition].get_Activable() != ""):
-            pass #Activable (chest, button, trap)
-        
-        #TO ADD: Ask the player if it want to save and quit or continue
-
-        if len(self.Rooms[self.PlayerPosition].get_NextRooms()) == 0:
-            pass #Check if the dungeon is finished
-
-        else:
+            os.system("cls")
             if(len(self.Rooms[self.PlayerPosition].get_NextRooms()) == 2):
                 t = random.randint(0,1)
-                print("1: "+str(self.Choices[self.Rooms[self.PlayerPosition].get_NextRooms()[0][1]][0]))
-                print("2: "+str(self.Choices[self.Rooms[self.PlayerPosition].get_NextRooms()[0][1]][1]))
-                if( t == 0):
-                    pass
-                else:
-                    pass
+                while(Input != "1" and Input != "2"):
+                    print("Choose a path\n")
+                    print("1: "+str(self.Choices[self.Rooms[self.PlayerPosition].get_NextRooms()[0][1]][0]))
+                    print("2: "+str(self.Choices[self.Rooms[self.PlayerPosition].get_NextRooms()[0][1]][1]))
+                    Input = input()
+                    if( t == 0):
+                        if(Input == "1"):
+                            self.PlayerPosition = self.Rooms[self.PlayerPosition].get_NextRooms()[0][0]
+                        if(Input == "2"):
+                            self.PlayerPosition = self.Rooms[self.PlayerPosition].get_NextRooms()[0][1]
+                    else:
+                        if(Input == "1"):
+                            self.PlayerPosition = self.Rooms[self.PlayerPosition].get_NextRooms()[0][1]
+                        if(Input == "2"):
+                            self.PlayerPosition = self.Rooms[self.PlayerPosition].get_NextRooms()[0][0]
+                Input = ""
+            elif(len(self.Rooms[self.PlayerPosition].get_NextRooms()) == 1):
+                self.PlayerPosition = self.Rooms[self.PlayerPosition].get_NextRooms()[0][0]
             else:
-                print("1: "+str(self.Choices2[self.Rooms[self.PlayerPosition].get_NextRooms()[0][1]]))
-        
-
-if __name__ == "__main__":
-    map = Map("test")
-    map.Generate()
-    map.Load()
-    map.Play()
+                is_end = True
