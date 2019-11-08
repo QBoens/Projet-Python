@@ -4,13 +4,13 @@ class Spell_book():
     def __init__(self):
         self.list_spells = list()
 
-        SAVE_PATH = "Physical_attack/"
+        SAVE_PATH = "../Physical_attack/"
         file = open(SAVE_PATH + "Data_attack_phy.json")
         data = json.load(file)
         for section in data:
             self.list_spells.append(Physical(section,data[section]["degat"]))
 
-        SAVE_PATH = "Magical_attack/"
+        SAVE_PATH = "../Magical_attack/"
         file = open(SAVE_PATH + "Data_attack_mag.json")
         data = json.load(file)
         for section in data:

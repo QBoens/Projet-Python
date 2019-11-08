@@ -72,9 +72,9 @@ class Character():
 
     def __str__(self):
 
-        texte = "Nom :\t\t\t\t\t\t\t" + self.nom
-        texte += "\nLevel :\t\t\t\t\t\t\t" + str(self.stat.level)
-        texte += "\nType :\t\t\t\t\t\t\t" + type(self).__name__ + '\n'
+        texte = "Nom : " + self.nom
+        texte += "\nLevel : " + str(self.stat.level)
+        texte += "\nType : " + type(self).__name__ + '\n'
         texte += str(self.stat)
 
         return texte
@@ -158,10 +158,9 @@ class Joueur(Character):
 
 
 class Monster(Character):
-    def __init__(self, section):
-        '''Création de l'objet fichier.ini'''
-
-        super().__init__( section)
+    def __init__(self):
+        name = "Nouveau"
+        super().__init__(name)
         self.set_stat()
         self.inventory.add_gold(randint(20,100))
 
@@ -179,7 +178,27 @@ class Monster(Character):
             object.set_level(self.get_level())
             self.inventory.add_object(object)
 
+    def load(self, nom, level_player):
+        DATA_PATH = "Monster/"
+        file = open(DATA_PATH + "Data_monstre.json")
+        data = json.load(file)
 
+        self.nom = nom
+
+        list_attr = self.stat.__dict__.items()
+        for attr in list_attr:
+            if (attr[0] == "level"):
+                break
+
+            if(attr[0] != "damage"):
+                self.stat.__setattr__(attr[0], data[nom][attr[0]])
+            else:
+                dmg_inf = data[nom]["damage_inf"]
+                dmg_sup = data[nom]["damage_sup"]
+                self.stat.__setattr__(attr[0], (dmg_inf, dmg_sup))
+
+        self.set_level(level_player)
+        
     def set_stat(self):
         DATA_PATH = "Monster/"
         file = open(DATA_PATH + "Data_monstre.json")
@@ -282,21 +301,21 @@ class Statistic():
 
     def __str__(self):
         texte = ""
-        texte += "HP : \t\t\t\t\t\t\t" + str(self.HP)
-        texte += "\nMP : \t\t\t\t\t\t\t" + str(self.MP)
-        texte += "\nShield points : \t\t\t\t" + str(self.shield_point)
-        texte += "\nChance of dodging : \t\t\t" + str(self.dodge)
-        texte += "\nChance of parry : \t\t\t\t" + str(self.parry)
-        texte += "\nChance of critical : \t\t\t" + str(self.critical)
-        texte += "\nRange of damages : \t\t\t\t[" + str(self.damage[0]) + '-' + str(self.damage[1]) + ']'
+        texte += "HP : " + str(self.HP)
+        texte += "\nMP : " + str(self.MP)
+        texte += "\nShield points : " + str(self.shield_point)
+        texte += "\nChance of dodging : " + str(self.dodge)
+        texte += "\nChance of parry : " + str(self.parry)
+        texte += "\nChance of critical : " + str(self.critical)
+        texte += "\nRange of damages : [" + str(self.damage[0]) + '-' + str(self.damage[1]) + ']'
         if(self.type_proprio == 'Joueur'):
             texte += "\n\n<<<<<STATISTICS>>>>>\n\n"
-            texte += "Games played : \t\t\t" + str(self.games_played)
-            texte += "\nGames finished : \t\t" + str(self.games_finished)
-            texte += "\nBiome discovered : \t\t" + str(self.biome_disc)
-            texte += "\nMonster killed : \t\t" + str(self.mons_kills)
-            texte += "\nWeapon founded : \t\t" + str(self.weapon_found)
-            texte += "\nArmor founded : \t\t" + str(self.armor_found)
+            texte += "Games played : " + str(self.games_played)
+            texte += "\nGames finished : " + str(self.games_finished)
+            texte += "\nBiome discovered : " + str(self.biome_disc)
+            texte += "\nMonster killed : " + str(self.mons_kills)
+            texte += "\nWeapon founded : " + str(self.weapon_found)
+            texte += "\nArmor founded : " + str(self.armor_found)
 
         return texte
 

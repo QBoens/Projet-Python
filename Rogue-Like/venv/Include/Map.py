@@ -157,6 +157,7 @@ class Map():
             if(len(self.Rooms[self.PlayerPosition].get_NextRooms()) == 2):
                 t = random.randint(0,1)
                 while(Input != "1" and Input != "2"):
+                    os.system("cls")
                     print("Choose a path\n")
                     print("1: "+str(self.Choices[self.Rooms[self.PlayerPosition].get_NextRooms()[0][1]][0]))
                     print("2: "+str(self.Choices[self.Rooms[self.PlayerPosition].get_NextRooms()[0][1]][1]))

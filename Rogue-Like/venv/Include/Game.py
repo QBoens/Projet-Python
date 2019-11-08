@@ -1,11 +1,11 @@
 import Map
-#import Character
+import Character
 import os
 
 if __name__ == "__main__":
     os.system("cls")
-    #Player
-    map = Map.Map("test")
+    player = Character.Joueur("Link")
+    map = Map.Map(player)
     Input = ""
     while(Input != "2"):
         print("1: Play\n2: Quit")
