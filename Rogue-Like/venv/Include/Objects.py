@@ -117,14 +117,14 @@ class Potion(Consumables):
         self.stat = list_of_stat[stat_index]
         self.name = "Potion for " + list_of_stat[stat_index]
         if(1 < stat_index):
-            self.value = 15
+            self.value = 5
         else:
             self.value = 30
 
-        for i in range(0, joueur.stat.level):
-            self.value = int(self.value * 1.6)
+        if(stat_index <= 1):
+            for i in range(0, joueur.stat.level):
+                self.value = int(self.value * 1.6)
 
 
 
-    def set_value(self, joueur):
-        return 0
+    

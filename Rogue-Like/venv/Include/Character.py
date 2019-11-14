@@ -12,6 +12,13 @@ class Character():
         self.inventory = Inventory(self)
         self.stat = Statistic(type(self).__name__)
 
+
+    def print_HP(self):
+        print("HP :",self.stat.HP,"/",self.stat.max_HP)
+
+    def print_MP(self):
+        print("MP :",self.stat.HP,"/",self.stat.max_MP)
+
     def get_level(self):
         return self.stat.level
 
@@ -104,8 +111,10 @@ class Joueur(Character):
 
 
     def newLevel(self):
-        self.stat.HP =  int(self.stat.HP * 1.6)
-        self.stat.MP = int(self.stat.MP * 1.6)
+        self.stat.max_HP =  int(self.stat.HP * 1.6)
+        self.stat.HP = self.stat.max_HP
+        self.stat.max_MP = int(self.stat.MP * 1.6)
+        self.stat.MP = self.stat.max_MP
         self.stat.level += 1
         self.stat.nextLevel = pow(self.stat.level, 2) * 10
         self.stat.xpBar = self.stat.nextLevel
@@ -142,8 +151,18 @@ class Joueur(Character):
                 choix_valide = True
 
         use_conso = consumables_lists[choix_joueur - 1]
-        print(use_conso.stat)
         self.stat.__setattr__(use_conso.stat, self.stat.__getattribute__(use_conso.stat) + use_conso.value)
+        if(use_conso.stat == "HP"):
+            if self.stat.HP > self.stat.max_HP :
+                print("Surplus de HP")
+                self.stat.HP = self.stat.max_HP
+
+        elif(use_conso.stat == "MP"):
+            if self.stat.MP > self.stat.max_MP :
+                print("Surplus de MP")
+                self.stat.MP = self.stat.max_MP
+
+        print("Vous avez maintenant : ",self.stat.__getattribute__(use_conso.stat),use_conso.stat)
 
     def addExp(self,xpPoint):
 
@@ -266,8 +285,10 @@ class Merchant(Character):
 
 class Statistic():
     def __init__(self,type_proprio):
-        self.HP = 100
-        self.MP = 100
+        self.max_HP = 100
+        self.HP = self.max_HP
+        self.max_MP = 100
+        self.MP = self.max_MP
         self.shield_point = 30
         self.dodge = randint(1, 101)
         self.parry = randint(1, 101)
@@ -297,12 +318,12 @@ class Statistic():
             self.__setattr__(attr,data[attr])
 
 
-
+    
 
     def __str__(self):
         texte = ""
-        texte += "HP : " + str(self.HP)
-        texte += "\nMP : " + str(self.MP)
+        texte += "HP : " + str(self.HP) + "/" + str(self.max_HP)
+        texte += "\nMP : " + str(self.MP) + "/" + str(self.max_MP)
         texte += "\nShield points : " + str(self.shield_point)
         texte += "\nChance of dodging : " + str(self.dodge)
         texte += "\nChance of parry : " + str(self.parry)

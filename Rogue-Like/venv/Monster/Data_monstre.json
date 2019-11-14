@@ -2,6 +2,8 @@
 	"Fistiland":
 	{
 		"HP":100,
+		"max_HP":100,
+		"max_MP":100,
 		"MP" : 100,
 		"shield_point" : 30,
 		"dodge" : 25,
@@ -14,6 +16,8 @@
 	{
 		"HP":150,
 		"MP" : 50,
+		"max_HP":150,
+		"max_MP":50,
 		"shield_point" : 30,
 		"dodge" : 15,
 		"parry" : 40,
@@ -25,6 +29,8 @@
 	{
 		"HP":75,
 		"MP" : 150,
+		"max_HP":75,
+		"max_MP":150,
 		"shield_point" : 15,
 		"dodge" : 50,
 		"parry" : 15,

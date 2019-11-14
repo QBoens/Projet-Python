@@ -36,7 +36,6 @@ class Inventory():
                     if(data[elem][objet_name]["Classe"] == "Potion"):
                         objet = Potion("Nom",0,self.proprio)
                         objet.load(objet_name,data[elem][objet_name])
-                        objet.set_value(self.proprio)
                         self.add_object(objet)
                     elif (data[elem][objet_name]["Classe"] == "Armor"):
                         objet = Armor()
