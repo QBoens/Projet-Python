@@ -151,6 +151,7 @@ class Joueur(Character):
                 choix_valide = True
 
         use_conso = consumables_lists[choix_joueur - 1]
+        save = self.stat.__getattribute__(use_conso.stat)
         self.stat.__setattr__(use_conso.stat, self.stat.__getattribute__(use_conso.stat) + use_conso.value)
         if(use_conso.stat == "HP"):
             if self.stat.HP > self.stat.max_HP :
@@ -161,6 +162,16 @@ class Joueur(Character):
             if self.stat.MP > self.stat.max_MP :
                 print("Surplus de MP")
                 self.stat.MP = self.stat.max_MP
+        
+        elif(use_conso.stat == "dodge"):
+            if self.stat.dodge > 99:
+                print("Vous ne pouvez pas avoir une chance d'esquiver superieure a 99")
+                self.stat.dodge = save
+
+        elif(use_conso.stat == "parry"):
+            if self.stat.parry > 99:
+                print("Vous ne pouvez pas avoir une chance de parer superieure a 99")
+                self.stat.parry = save
 
         print("Vous avez maintenant : ",self.stat.__getattribute__(use_conso.stat),use_conso.stat)
 
