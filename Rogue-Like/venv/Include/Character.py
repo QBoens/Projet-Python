@@ -19,6 +19,12 @@ class Character():
     def print_MP(self):
         print("MP :",self.stat.HP,"/",self.stat.max_MP)
 
+    def get_HP(self):
+        return self.stat.HP
+
+    def get_MP(self):
+        return self.stat.MP
+
     def get_level(self):
         return self.stat.level
 
