@@ -1,9 +1,11 @@
 import random
 import json
 import os
+from Include.Character import Monster
+from Include.Character import Joueur
 
-SAVING_PATH = "../Save/"
-INTRODUCTIONLINES_PATH = "../IntroductionLine/"
+SAVING_PATH = "./Save/"
+INTRODUCTIONLINES_PATH = "./IntroductionLine/"
 
 class Room():
     def __init__(self, ID,Character,Activable,IntroductionLine):
@@ -56,6 +58,9 @@ class Map():
         self.StartingRoom = None #Index
         self.Choices = [["Turn Left","Turn Right"],["Go upstair","Go downstair"]]
         self.Choices2 = ["Continue to the next room","Open the door and continue the adventure"]
+    
+    def Print_PlayerStat(self):
+        print("HP: "+str(self.Player.get_HP())+"/"+str(self.Player.get_MaxHP())+"\nMP: "+str(self.Player.get_MP())+"/"+str(self.Player.get_MaxMP())+"\n")
 
     #Generates the rooms
     def Generate(self):
@@ -70,7 +75,12 @@ class Map():
         while(len(buffer) != 0):
             for i in range(0,buffer[0][1]):
                 intro_line = intro_lines[random.randint(0,len(intro_lines)-1)]
-                self.Rooms.append(Room(i,"","",js[intro_line]["IntroductionLine"])) #TODO
+                if(random.choice([True,False])):
+                    monster = Monster()
+                    monster = monster.nom 
+                else:
+                    monster = ""
+                self.Rooms.append(Room(i,str(monster),"",js[intro_line]["IntroductionLine"])) #TODO
 
                 if(i != buffer[0][1]-1):
                     another_path = random.randint(0,100)
@@ -132,21 +142,58 @@ class Map():
         Input = ""
         while(is_end == False):
             os.system("cls")
-            self.Rooms[self.PlayerPosition].Introduce()
 
+            self.Print_PlayerStat()
+            self.Rooms[self.PlayerPosition].Introduce()
             if(self.Rooms[self.PlayerPosition].get_Character() != ""):
-                print("A MONSTER HAS APPEARED\n")
-                print("What do you want to do?\n\n1: Fight\n2: Inventory\n3: Move to the next room\n4: Exit game") #Combat ou Marchand
+                print("A MONSTER HAS APPEARED")
+                print("What do you want to do?\n\n1: Fight\n2: Inventory\n3: Exit game")
+                while(Input != "1" and Input != "3"):
+                    Input = input()
+                    if(Input == "2"):
+                        os.system("cls")
+                        Input = ""
+                        #print("INVENTORY") #TODO
+                        Input = ""
+                        self.Print_PlayerStat()
+                        print("A MONSTER HAS APPEARED\n")
+                        print("What do you want to do?\n\n1: Fight\n2: Inventory\n3: Exit game")
+                    elif(Input != "3" and Input != "1"):
+                        os.system("cls")
+                        Input = ""
+                        self.Print_PlayerStat()
+                        print("A MONSTER HAS APPEARED\n")
+                        print("What do you want to do?\n\n1: Fight\n2: Inventory\n3: Exit game")
+                if(Input == "3"):
+                    break
+                if(Input == "1"):            #COMBAT
+                    os.system("cls")
+                    Input = ""
+                    monster = Monster()
+                    monster.load(self.Rooms[self.PlayerPosition].get_Character(),self.Player.get_level())
+                    player_Turn = True
+                    while(monster.is_dead() == False and self.Player.is_dead() == False):
+                        if(player_Turn):
+                            pass
+                        else:
+                            pass
+                    Input = ""
             else:
                 print("What do you want to do?\n\n1: Inventory\n2: Move to the next room\n3: Exit game")
                 while(Input != "2" and Input != "3"):
                     Input = input()
                     if(Input == "1"):
                         os.system("cls")
-                        print("THIS IS THE INVENTORY")
-                    else:
+                        Input = ""
+                        #print("THIS IS THE INVENTORY") #TODO
+                        Input = ""
+                        self.Print_PlayerStat()
+                        print("What do you want to do?\n\n1: Inventory\n2: Move to the next room\n3: Exit game")
+                    elif(Input != "2" and Input != "3"):
                         os.system("cls")
-                        print("1: Inventory\n2: Move to the next room\n3: Exit game")
+                        Input = ""
+                        self.Print_PlayerStat()
+                        print("What do you want to do?\n\n1: Inventory\n2: Move to the next room\n3: Exit game")
                 if(Input == "3"):
                     break
                 Input = ""
@@ -158,7 +205,8 @@ class Map():
                 t = random.randint(0,1)
                 while(Input != "1" and Input != "2"):
                     os.system("cls")
-                    print("Choose a path\n")
+                    self.Print_PlayerStat()
+                    print("Two directions appears before you\n\nwhich path do you choose?\n")
                     print("1: "+str(self.Choices[self.Rooms[self.PlayerPosition].get_NextRooms()[0][1]][0]))
                     print("2: "+str(self.Choices[self.Rooms[self.PlayerPosition].get_NextRooms()[0][1]][1]))
                     Input = input()

@@ -21,6 +21,12 @@ class Character():
 
     def get_HP(self):
         return self.stat.HP
+    
+    def get_MaxHP(self):
+        return self.stat.max_HP
+
+    def get_MaxMP(self):
+        return self.stat.max_MP
 
     def get_MP(self):
         return self.stat.MP
