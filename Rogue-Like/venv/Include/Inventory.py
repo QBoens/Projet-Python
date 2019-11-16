@@ -17,6 +17,7 @@ class Inventory():
         self.slot_jewels = list()
         self.slot_weapon = list()
         self.slot_weapon = [0,0]
+        self.max_size = 10
 
     def save(self):
         data = {"objet":self.save_list(),"weapon":self.save_weapon(),"armor":self.save_armor()}
@@ -90,18 +91,13 @@ class Inventory():
     def save_armor(self):
         data_armor_equiped = {}
         for armor in self.list_equiped_armor():
-            data_armor_equiped[armor.name] = armor.save()
+            try:
+                data_armor_equiped[armor.name] = armor.save()
+            except:
+                a = 1
         return data_armor_equiped
 
-    def list_equiped_armor(self):
-        list_equip = list()
 
-        for armor in self.slot_armor:
-            print(self.slot_armor[armor])
-            if(self.slot_armor[armor]!="aucune"):
-                list_equip.append(self.slot_armor[armor])
-
-        return list_equip
 
     def save_list(self):
         data_all_objects = {}
@@ -116,9 +112,11 @@ class Inventory():
             if self.can_equip(weapon):
                 if self.slot_weapon[1] == 0:
                     self.slot_weapon[1] = weapon
+                    self.remove_object(weapon)
                     print("Right hand's weapon:", weapon.name)
                 else:
                     choix_valide = False
+                    print(self.slot_weapon[1])
                     texte = "Do you want to change your right hand's weapon ?"
                     texte += "\ny-yes\tn-no\n"
 
@@ -131,6 +129,8 @@ class Inventory():
                             self.add_object(self.slot_weapon[1])
                             self.slot_weapon[1] = weapon
                             print("Weapon in right hand's :", weapon.name)
+
+                            self.remove_object(weapon)
                             choix_valide = True
                         else:
                             print("Right hand's weapon hasn't been replaced")
@@ -140,14 +140,18 @@ class Inventory():
         else:
             self.slot_weapon[1] = weapon
 
+
+
     def equip_weapon_G(self, weapon):
         if type(self.proprio).__name__ == "Joueur":
             if self.can_equip(weapon):
                 if self.slot_weapon[0] == 0:
                     self.slot_weapon[0] = weapon
+                    self.remove_object(weapon)
                     print("Left hand's weapon :", weapon.name)
                 else:
                     choix_valide = False
+                    print(self.slot_weapon[0])
                     texte = "Do you want to change your left hand's weapon ?"
                     texte += "\ny-yes\tn-no\n"
 
@@ -160,6 +164,7 @@ class Inventory():
                             self.add_object(self.slot_weapon[1])
                             self.slot_weapon[0] = weapon
                             print("Left hand's weapon :", weapon.name)
+                            self.remove_object(weapon)
                             choix_valide = True
                         else:
                             print("Left hand's weapon hasn't been replaced")
@@ -168,6 +173,79 @@ class Inventory():
                 print("You can't equip this weapon")
         else:
             self.slot_weapon[0] = weapon
+
+
+    def list_of_weapon(self):
+        list_weapon = list()
+        for objet in self.list_objects:
+            if(type(objet).__name__ == "Weapon"):
+                list_weapon.append(objet)
+
+        return list_weapon
+
+    def list_of_armor(self):
+        list_armor = list()
+        for objet in self.list_objects:
+            if (type(objet).__name__ == "Armor"):
+                list_armor.append(objet)
+
+        return list_armor
+
+    def list_equipment_possible(self):
+        list_equip = list()
+        for weapon in self.list_of_weapon():
+            list_equip.append(weapon)
+
+        for armor in self.list_of_armor():
+            list_equip.append(armor)
+        return list_equip
+
+    def equip_wa(self):
+        list_equip = self.list_equipment_possible()
+        print("Vous pouvez vous équiper des objets suivant :")
+        indice = 1
+        choix_possibles = list()
+        for equip in list_equip:
+            print('-------------',indice,'-------------')
+            print(equip)
+            choix_possibles.append(str(indice))
+            indice += 1
+
+        choix_valide = False
+        texte = "Quel equipement choisissez vous?"
+        texte += "\nEntrez le numéro\n"
+
+        while not choix_valide:
+            choix = input(texte)
+            if not choix in choix_possibles:
+                print("Choix non valide")
+
+            else:
+                choix_valide = True
+                if(type(list_equip[int(choix) - 1]).__name__ == "Armor"):
+                    self.equip_armor(list_equip[int(choix) - 1])
+                    return 0
+                else:
+                    arme_choisie = int(choix)
+                    break
+
+        choix_valide = False
+
+        texte = "Main droite ou gauche?"
+        texte += "\nG - Gauche\tD - Droite\n"
+
+        while not choix_valide:
+            choix = input(texte)
+            if (choix != 'G' and choix != 'D'):
+                print("Choix non valide")
+
+            elif choix.upper() == 'D':
+                self.equip_weapon_R(list_equip[arme_choisie - 1])
+                break
+
+            elif choix.upper() == 'G':
+                self.equip_weapon_G(list_equip[arme_choisie - 1])
+                break
 
     def add_object(self, object):
         self.list_objects.append(object)
@@ -199,7 +277,9 @@ class Inventory():
             if self.can_equip(armor):
                 if self.slot_armor[armor.type]=="aucune":
                     self.slot_armor[armor.type] = armor
+
                     print("You are now equiped with :", self.slot_armor[armor.type].name)
+                    self.remove_object(armor)
                 else:
                     print("Actually you have ",self.slot_armor[armor.type].name,"equiped")
                     choix_valide = False
@@ -214,6 +294,7 @@ class Inventory():
                         elif (replace == "y"):
                             self.slot_armor[armor.type] = armor
                             print("You are now equiped with :", self.slot_armor[armor.type].name)
+                            self.remove_object(armor)
                             choix_valide = True
                         else:
                             print("Armor hasn't been replaced")
@@ -266,6 +347,16 @@ class Inventory():
     def get_armor_point(self):
         armor_point = 0
         for armor in self.list_equiped_armor():
-            armor_point += armor.df_bonus
-        print("armor_point :",armor_point)
+            try:
+                armor_point += armor.df_bonus
+            except:
+                continue
         return armor_point
+
+    def list_equiped_armor(self):
+        list_equip = list()
+
+        for elem in self.slot_armor.keys():
+            list_equip.append(self.slot_armor[elem])
+
+        return list_equip

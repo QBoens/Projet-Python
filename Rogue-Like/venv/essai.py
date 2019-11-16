@@ -12,62 +12,26 @@ def run():
     monstre = Monster()
     armure = Armor()
     armure.lvl = 1
-    joueur.inventory.equip_armor(armure)
-    """
-    joueur.addExp(5000)
-    armure = Armor()
-    armure2 = Armor()
+
+    joueur.inventory.add_object(armure)
 
     arme = Weapon()
-    arme2 = Weapon()
-    arme2.set_level(joueur.get_level())
-
     arme.lvl = 1
-    arme2.lvl = 1
 
+    arme2 = Weapon()
+    arme.lvl = 1
 
-    Potion1 = Potion("Nouveau",12,joueur)
-    Potion2 = Potion("Nouveau", 12, joueur)
-    Potion3 = Potion("Nouveau", 12, joueur)
-
-    joueur.inventory.add_object(Potion1)
-    #joueur.inventory.add_object(armure)
-
-    armure.set_level(joueur.get_level())
-    armure2.set_level(joueur.get_level())
-    armure.lvl = 1
-    armure2.lvl = 1
-    joueur.inventory.equip_armor(armure)
-    joueur.inventory.equip_armor(armure2)
-    """
-    """
     joueur.inventory.add_object(arme)
     joueur.inventory.add_object(arme2)
-    """
-    """
-    joueur.inventory.equip_weapon_R(arme)
-    joueur.inventory.equip_weapon_G(arme2)
-    """
-    """
-    joueur.inventory.add_object(Potion3)
-    joueur.save()
 
-    joueur2 = Joueur("Nouveau")
-    joueur2.load()
+    #joueur.inventory.equip_armor(armure)
+    #joueur.inventory.equip_weapon_G(arme)
 
-    joueur2.stat.HP = 1
-    joueur2.stat.parry = 96
-    joueur2.stat.dodge = 96
-    joueur2.use_consumable()
-    """
-    #joueur.spell_book.list_of_spells()
-    print("Player dodge :",joueur.stat.dodge,"\tPlayer parry :", joueur.stat.parry)
-    print("Monstre dodge :", monstre.stat.dodge, "\tMonstre parry :", monstre.stat.parry)
-    joueur.attack_phy(joueur.spell_book.list_spells[0], monstre)
-    liste = joueur.spell_book.get_list_of_spells()
-    monstre.attack_phy("basique",joueur)
-    monstre.print_HP()
-    joueur.print_HP()
+    print(joueur.inventory.list_objects)
+    joueur.inventory.equip_wa()
+    print(joueur.inventory.list_objects)
+    joueur.inventory.equip_wa()
+    print(joueur.inventory.list_objects)
     return 0
 
 run()

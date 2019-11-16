@@ -81,12 +81,12 @@ class Character():
                 result = 2
                 degat *= 2
 
-            if True:
-            #if cible.can_parry():
+            if cible.can_parry():
+                print("Parade de", cible.nom)
                 result = 1
-                degat -= cible.stat.shield_point
+                degat -= int(cible.stat.shield_point * 0.7)
                 if (type(cible).__name__ == 'Joueur'):
-                    degat -= self.inventory.get_armor_point()
+                    degat -= cible.inventory.get_armor_point()
                 if(degat < 0):
                     degat = 0
             cible.take_dmg(degat)
@@ -103,13 +103,15 @@ class Character():
                 degat *= 2
 
             if cible.can_parry():
-                degat -= cible.stat.shield_point
+                degat -= int(cible.stat.shield_point * 0.7)
+                print(cible.nom,"pare")
                 result = 1
                 if(type(cible).__name__ == 'Joueur'):
                     degat -= self.inventory.get_armor_point()
 
             cible.take_dmg(degat)
         else:
+            print(cible.nom, "pare")
             result = 0
         return result
 
@@ -401,8 +403,8 @@ class Statistic():
         self.max_MP = 100
         self.MP = self.max_MP
         self.shield_point = 10
-        self.dodge = randint(1, 101)
-        self.parry = randint(1, 101)
+        self.dodge = randint(1, 25)
+        self.parry = randint(25, 75)
         self.critical = randint(1, 101)
         self.damage = (1, 20)
         self.level = 1
