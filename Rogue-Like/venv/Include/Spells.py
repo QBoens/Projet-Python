@@ -19,7 +19,7 @@ class Spell_book():
 
     def new_level(self):
         for spell in self.list_spells:
-            spell.dmg = int(spell.dmg * 1.4)
+            spell.dmg = int(spell.dmg * 1.6)
             if(type(spell).__name__ == "Magical"):
                 spell.MP_cost = int(spell.MP_cost * 1.6)
 

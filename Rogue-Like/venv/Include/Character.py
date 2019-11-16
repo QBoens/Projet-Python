@@ -17,51 +17,51 @@ class Character():
         self.stat.HP = self.stat.max_HP
 
     def print_HP(self):
-        """Print Character HP"""
+        """Affiche Character HP"""
         print("HP :",self.stat.HP,"/",self.stat.max_HP)
 
     def print_MP(self):
-        """Print Character MP"""
-        print("MP :",self.stat.HP,"/",self.stat.max_MP)
+        """Affiche Character MP"""
+        print("MP :",self.stat.MP,"/",self.stat.max_MP)
 
     def get_HP(self):
-        """Return Character HP"""
+        """Renvoie Character HP"""
         return self.stat.HP
     
     def get_MaxHP(self):
-        """Return Character MP"""
+        """Renvoie Character MP"""
         return self.stat.max_HP
 
     def get_MaxMP(self):
-        """Return Character max HP"""
+        """Renvoie Character max HP"""
         return self.stat.max_MP
 
     def get_MP(self):
-        """Return Character max MP"""
+        """Renvoie Character max MP"""
         return self.stat.MP
 
     def get_level(self):
-        """Return Character level"""
+        """Renvoie Character level"""
         return self.stat.level
 
     def take_dmg(self, degats):
-        """HP points go downs by degats points"""
+        """Les points d'HP diminues de degats"""
         self.stat.HP -= degats
         self.is_dead()
 
     def is_dead(self):
-        """Check if character is dead"""
+        """Vérifie si Character est mort"""
         if self.stat.HP <= 0:
             return True
         else:
             return False
 
     def weapon_equip(self):
-        """Show Character equiped weapon"""
+        """Affiche les armes équipées de Character"""
         return self.inventory.slot_weapon
 
     def attack_phy(self, attack, cible):
-        """Character use a physical attack"""
+        """Character utilise une attaque physique"""
         list_weapon = self.weapon_equip()
         deg_weapon = 0
         result = 3
@@ -72,21 +72,30 @@ class Character():
             if not type(weapon).__name__== 'int':
                 deg_weapon += weapon.dg_bonus
 
+        """On vérifie si la cible esquive"""
         if not cible.can_avoid():
             degat = randint(self.stat.damage[0], self.stat.damage[1])
+
+            """Seul le joueur possède un panel d'attaque différentes"""
             if (type(self).__name__ == 'Joueur'):
                 degat += attack.dmg
             degat += deg_weapon
+
+            """On vérifie si l'attaque est critique"""
             if self.is_critic():
                 result = 2
                 degat *= 2
 
+            """On vérifie si la cible pare"""
             if cible.can_parry():
-                print("Parade de", cible.nom)
                 result = 1
                 degat -= int(cible.stat.shield_point * 0.7)
+
+                """Le joueur a un bonus d'armure"""
                 if (type(cible).__name__ == 'Joueur'):
-                    degat -= cible.inventory.get_armor_point()
+                    degat -= int(cible.inventory.get_armor_point() * 0.7)
+
+                """Cas où l'armure peut encaisser plus que les dégats"""
                 if(degat < 0):
                     degat = 0
             cible.take_dmg(degat)
@@ -95,6 +104,13 @@ class Character():
         return result
 
     def attack_mag(self, spell, cible):
+        """Character utilise une attaque magique"""
+        if not self.can_use_spell(spell):
+            print("here")
+            return -1
+
+        self.stat.MP -= spell.MP_cost
+        self.print_MP()
         degat = spell.dmg
         result = 3
         if not cible.can_avoid():
@@ -114,6 +130,12 @@ class Character():
             print(cible.nom, "pare")
             result = 0
         return result
+
+    def can_use_spell(self, spell):
+        if(self.stat.MP < spell.MP_cost):
+            return False
+        else:
+            return True
 
     def is_critic(self):
         chance = randint(1,101)
@@ -155,6 +177,7 @@ class Joueur(Character):
         super().__init__(name)
         self.spell_book = Spell_book()
 
+
     def save(self):
         data={"nom":self.nom,"stat":self.stat.save()}
         self.inventory.save()
@@ -173,16 +196,7 @@ class Joueur(Character):
 
 
     def newLevel(self):
-        self.stat.max_HP =  int(self.stat.HP * 1.6)
-        self.stat.HP = self.stat.max_HP
-        self.stat.max_MP = int(self.stat.MP * 1.6)
-        self.stat.MP = self.stat.max_MP
-        self.stat.level += 1
-        self.stat.nextLevel = pow(self.stat.level, 2) * 10
-        self.stat.xpBar = self.stat.nextLevel
-        self.stat.shield_point = int(self.stat.shield_point * 1.5)
-        self.stat.damage = (1,int(self.stat.damage[1] * 1.6))
-
+        self.stat.newLevel()
         self.spell_book.new_level()
 
     def use_consumable(self):
@@ -237,6 +251,9 @@ class Joueur(Character):
                 self.stat.parry = save
 
         print("Vous avez maintenant : ",self.stat.__getattribute__(use_conso.stat),use_conso.stat)
+
+    def getExp(self):
+        self.addExp(self.stat.addExp)
 
     def addExp(self,xpPoint):
 
@@ -360,7 +377,9 @@ class Monster(Character):
         self.stat.level = joueur_level
         for i in range(0, joueur_level):
             self.stat.HP = int(self.stat.HP * 1.6)
+            self.stat.max_HP = int(self.stat.max_HP * 1.6)
             self.stat.MP = int(self.stat.MP * 1.4)
+            self.stat.max_MP = int(self.stat.max_MP * 1.4)
             self.stat.shield_point += int(self.stat.shield_point / 4)
             self.stat.damage = (1, int(self.stat.damage[1] * (1.6)))
 
@@ -410,6 +429,7 @@ class Statistic():
         self.damage = (1, 20)
         self.level = 1
         self.nextLevel = 10
+        self.addExp = 10
         self.xpBar = self.nextLevel
         self.bonus_stat = list()
         self.armor = 10
@@ -431,8 +451,17 @@ class Statistic():
         for attr in self.__dict__.keys():
             self.__setattr__(attr,data[attr])
 
-
-    
+    def newLevel(self):
+        self.max_HP = int(self.HP * 1.6)
+        self.HP = self.max_HP
+        self.max_MP = int(self.MP * 1.6)
+        self.MP = self.max_MP
+        self.level += 1
+        self.nextLevel = pow(self.level, 2) * 10
+        self.xpBar = self.nextLevel
+        self.addExp = int(pow(self.level, 2) * 10 * 0.4)
+        self.shield_point = int(self.shield_point * 1.5)
+        self.damage = (1, int(self.damage[1] * 1.6))
 
     def __str__(self):
         texte = ""
