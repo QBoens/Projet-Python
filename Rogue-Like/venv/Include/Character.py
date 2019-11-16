@@ -61,10 +61,10 @@ class Character():
         return self.inventory.slot_weapon
 
     def attack_phy(self, attack, cible):
-        """Character use an"""
+        """Character use a physical attack"""
         list_weapon = self.weapon_equip()
         deg_weapon = 0
-
+        result = 3
         """
         On récupére les dégats qu'infligent les armes
         """
@@ -78,12 +78,10 @@ class Character():
                 degat += attack.dmg
             degat += deg_weapon
             if self.is_critic():
-                print(self.nom,"réalise un critique")
                 degat *= 2
 
-            #if cible.can_parry():
-            if True:
-                print(cible.nom, "pare l'attaque")
+            if cible.can_parry():
+                result = 1
                 degat -= cible.stat.shield_point
                 if (type(cible).__name__ == 'Joueur'):
                     degat -= self.inventory.get_armor_point()
@@ -91,8 +89,8 @@ class Character():
                     degat = 0
             cible.take_dmg(degat)
         else:
-            print(cible.nom,"esquive l'attaque")
-
+            result = 0
+        return result
 
     def attack_mag(self, spell, cible):
         degat = spell.dmg
