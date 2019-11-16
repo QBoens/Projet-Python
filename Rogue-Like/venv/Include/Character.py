@@ -78,6 +78,7 @@ class Character():
                 degat += attack.dmg
             degat += deg_weapon
             if self.is_critic():
+                result = 2
                 degat *= 2
 
             if cible.can_parry():
@@ -94,18 +95,22 @@ class Character():
 
     def attack_mag(self, spell, cible):
         degat = spell.dmg
+        result = 3
         if not cible.can_avoid():
             if self.is_critic():
+                result = 2
                 degat *= 2
 
             if cible.can_parry():
                 degat -= cible.stat.shield_point
-
+                result = 1
                 if(type(cible).__name__ == 'Joueur'):
                     degat -= self.inventory.get_armor_point()
 
             cible.take_dmg(degat)
-
+        else:
+            result = 0
+        return result
 
     def is_critic(self):
         chance = randint(1,101)
