@@ -1,5 +1,6 @@
 import random
 import json
+import time
 import os
 from Include.Character import Monster
 from Include.Character import Joueur
@@ -148,41 +149,108 @@ class Map():
             self.Rooms[self.PlayerPosition].Introduce()
             if(self.Rooms[self.PlayerPosition].get_Character() != ""):
                 print("A MONSTER HAS APPEARED")
-                print("What do you want to do?\n\n1: Fight\n2: Inventory\n3: Exit game")
-                while(Input != "1" and Input != "3"):
+                print("What do you want to do?\n\n1: Fight\n2: Inventory\n3: Potion\n4: Exit game")
+                while(Input != "1" and Input != "4"):
                     Input = input()
                     if(Input == "2"):
                         os.system("cls")
                         Input = ""
                         #print("INVENTORY") #TODO
                         Input = ""
+                        os.system("cls")
                         self.Print_PlayerStat()
-                        print("A MONSTER HAS APPEARED\n")
-                        print("What do you want to do?\n\n1: Fight\n2: Inventory\n3: Exit game")
-                    elif(Input != "3" and Input != "1"):
+                        print("A MONSTER HAS APPEARED")
+                        print("What do you want to do?\n\n1: Fight\n2: Inventory\n3: Potion\n4: Exit game")
+                    elif(Input == "3"):
+                        os.system("cls")
+                        Input = ""
+                        self.Player.use_consumable()
+                        os.system("cls")
+                        self.Print_PlayerStat()
+                        print("A MONSTER HAS APPEARED")
+                        print("What do you want to do?\n\n1: Fight\n2: Inventory\n3: Potion\n4: Exit game")
+                    elif(Input != "4" and Input != "1"):
                         os.system("cls")
                         Input = ""
                         self.Print_PlayerStat()
-                        print("A MONSTER HAS APPEARED\n")
-                        print("What do you want to do?\n\n1: Fight\n2: Inventory\n3: Exit game")
-                if(Input == "3"):
+                        print("A MONSTER HAS APPEARED")
+                        print("What do you want to do?\n\n1: Fight\n2: Inventory\n3: Potion\n4: Exit game")
+                if(Input == "4"):
                     break
                 if(Input == "1"):            #COMBAT
                     os.system("cls")
                     Input = ""
                     monster = Monster()
-                    monster.load(self.Rooms[self.PlayerPosition].get_Character(),self.Player.get_level())
                     player_Turn = True
+                    code = 3 #DEGAT INFLIGE NORMAL 1) parade 0) 0degat pris
                     while(monster.is_dead() == False and self.Player.is_dead() == False):
                         if(player_Turn):
-                            pass
-                        else:
-                            monster.attack_phy(self.Player)
+                            Input = ""
+                            self.Print_PlayerStat()
+                            print("Monster HP: "+str(monster.get_HP())+"/"+str(monster.get_MaxHP())+"\n")
+                            print("What do you do\n\n1: Slam\n2: Furious Slash\n3: Estoc\n4: Bladestorm\n5: Fireball\n6: Lightning\n7: Ice Spear\n8: Earth Fist")
+                            while(Input != "1" and Input != "2" and Input != "3" and Input != "4" and Input != "5" and Input != "6" and Input != "7" and Input != "8"):
+                                Input = input()
+                                if(Input != "1" and Input != "2" and Input != "3" and Input != "4" and Input != "5" and Input != "6" and Input != "7" and Input != "8"):
+                                    os.system("cls")
+                                    self.Print_PlayerStat()
+                                    print("Monster HP: "+str(monster.get_HP())+"/"+str(monster.get_MaxHP())+"\n")
+                                    print("What do you do\n\n1: Slam\n2: Furious Slash\n3: Estoc\n4: Bladestorm\n5: Fireball\n6: Lightning\n7: Ice Spear\n8: Earth Fist")
+                                    Input = ""
+                            spell_list = self.Player.spell_book.get_list_of_spells()
+                            if(Input == "1"):
+                                code = self.Player.attack_phy(spell_list[0],monster)
+                            elif(Input == "2"):
+                                code = self.Player.attack_phy(spell_list[1],monster)
+                            elif(Input == "3"):
+                                code = self.Player.attack_phy(spell_list[2],monster)
+                            elif(Input == "4"):
+                                code = self.Player.attack_phy(spell_list[3],monster)
+                            elif(Input == "5"):
+                                code = self.Player.attack_mag(spell_list[4],monster)
+                            elif(Input == "6"):
+                                code = self.Player.attack_mag(spell_list[5],monster)
+                            elif(Input == "7"):
+                                code = self.Player.attack_mag(spell_list[6],monster)
+                            elif(Input == "8"):
+                                code = self.Player.attack_mag(spell_list[7],monster)
+                            Input = ""
                             os.system("cls")
                             self.Print_PlayerStat()
+                            print("Monster HP: "+str(monster.get_HP())+"/"+str(monster.get_MaxHP())+"\n")
+                            if(code == 3):
+                                print("THE MONSTER TOOK DAMAGE")
+                            elif(code == 2):
+                                print("THE MONSTER TOOK CRITICAL DAMAGE")
+                            elif(code == 1):
+                                print("THE MONSTER COUNTER YOUR ATTACK")
+                            elif(code == 0):
+                                print("THE MONSTER TOOK NO DAMAGE")
+                            time.sleep(2)
+                            os.system("cls")
+                            player_Turn = False
+                        else:
+                            player_Turn = True
+                            code = monster.attack_phy("",self.Player)
+                            os.system("cls")
+                            self.Print_PlayerStat()
+                            print("Monster HP: "+str(monster.get_HP())+"/"+str(monster.get_MaxHP())+"\n")
+                            if(code == 3):
+                                print("YOU TOOK DAMAGE")
+                            elif(code == 2):
+                                print("YOU TOOK CRITICAL DAMAGE")
+                            elif(code == 1):
+                                print("YOU COUNTER THE ATTACK")
+                            elif(code == 0):
+                                print("YOU TOOK NO DAMAGE")
+                            time.sleep(2)
+                            os.system("cls")
                     if(monster.is_dead()):
-                        pass
+                        self.Player.get_loot(monster)
+                        self.Rooms[self.PlayerPosition].Character = ""
+                        player_Turn = True
                     else:
+                        os.system("cls")
                         self.Player.revive() #REVIVE THE PLAYER
                         self.Generate() #CREATE A NEW DUNGEON
                         Input = ""
@@ -195,8 +263,8 @@ class Map():
                             break
                     Input = ""
             else:
-                print("What do you want to do?\n\n1: Inventory\n2: Move to the next room\n3: Exit game")
-                while(Input != "2" and Input != "3"):
+                print("What do you want to do?\n\n1: Inventory\n2: Potion\n3: Move to the next room\n4: Exit game")
+                while(Input != "3" and Input != "4"):
                     Input = input()
                     if(Input == "1"):
                         os.system("cls")
@@ -204,13 +272,20 @@ class Map():
                         #print("THIS IS THE INVENTORY") #TODO
                         Input = ""
                         self.Print_PlayerStat()
-                        print("What do you want to do?\n\n1: Inventory\n2: Move to the next room\n3: Exit game")
-                    elif(Input != "2" and Input != "3"):
+                        print("What do you want to do?\n\n1: Inventory\n2: Potion\n3: Move to the next room\n4: Exit game")
+                    elif(Input == "2"):
+                        os.system("cls")
+                        Input = ""
+                        self.Player.use_consumable()
+                        os.system("cls")
+                        self.Print_PlayerStat()
+                        print("What do you want to do?\n\n1: Inventory\n2: Potion\n3: Move to the next room\n4: Exit game")
+                    elif(Input != "3" and Input != "4"):
                         os.system("cls")
                         Input = ""
                         self.Print_PlayerStat()
-                        print("What do you want to do?\n\n1: Inventory\n2: Move to the next room\n3: Exit game")
-                if(Input == "3"):
+                        print("What do you want to do?\n\n1: Inventory\n2: Potion\n3: Move to the next room\n4: Exit game")
+                if(Input == "4"):
                     break
                 Input = ""
 
