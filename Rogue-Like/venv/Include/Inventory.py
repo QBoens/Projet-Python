@@ -219,6 +219,7 @@ class Inventory():
         else:
             self.slot_armor[armor.type] = armor
 
+        self.armor_equiped()
 
 
     def can_equip(self,equipment):

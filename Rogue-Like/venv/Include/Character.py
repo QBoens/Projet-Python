@@ -78,14 +78,17 @@ class Character():
                 degat += attack.dmg
             degat += deg_weapon
             if self.is_critic():
+                print(self.nom,"réalise un critique")
                 degat *= 2
 
-            if cible.can_parry():
+            #if cible.can_parry():
+            if True:
                 print(cible.nom, "pare l'attaque")
                 degat -= cible.stat.shield_point
                 if (type(cible).__name__ == 'Joueur'):
                     degat -= self.inventory.get_armor_point()
-
+                if(degat < 0):
+                    degat = 0
             cible.take_dmg(degat)
         else:
             print(cible.nom,"esquive l'attaque")
@@ -392,7 +395,7 @@ class Statistic():
         self.HP = self.max_HP
         self.max_MP = 100
         self.MP = self.max_MP
-        self.shield_point = 30
+        self.shield_point = 10
         self.dodge = randint(1, 101)
         self.parry = randint(1, 101)
         self.critical = randint(1, 101)

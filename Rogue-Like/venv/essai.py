@@ -61,6 +61,8 @@ def run():
     joueur2.use_consumable()
     """
     #joueur.spell_book.list_of_spells()
+    print("Player dodge :",joueur.stat.dodge,"\tPlayer parry :", joueur.stat.parry)
+    print("Monstre dodge :", monstre.stat.dodge, "\tMonstre parry :", monstre.stat.parry)
     joueur.attack_phy(joueur.spell_book.list_spells[0], monstre)
     liste = joueur.spell_book.get_list_of_spells()
     monstre.attack_phy("basique",joueur)
