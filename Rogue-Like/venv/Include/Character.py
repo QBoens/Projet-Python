@@ -223,15 +223,24 @@ class Joueur(Character):
 
         consumables_lists = list()
         id_conso = 0
+
+        """On récupére la liste des consommables"""
         for object in self.inventory.list_objects:
             if(type(object).__name__ == "Potion" or type(object).__name__ == "Food"):
                 consumables_lists.append(object)
 
+        """Le joueur n'a pas de potion"""
+        if (len(consumables_lists) == 0):
+            print("You don't have any consumables")
+            return 0
+
+        """Affichage de la liste des potions possibles"""
         print("Here is the list of consumables :")
         for conso in consumables_lists:
             print(str(id_conso + 1), ' - ', conso)
             id_conso += 1
 
+        """On demande au joueur de choisir une potion"""
         choix_valide = False
 
         while(not choix_valide):
@@ -247,22 +256,25 @@ class Joueur(Character):
         self.inventory.remove_object(consumables_lists[choix_joueur - 1])
         save = self.stat.__getattribute__(use_conso.stat)
         self.stat.__setattr__(use_conso.stat, self.stat.__getattribute__(use_conso.stat) + use_conso.value)
-        if(use_conso.stat == "HP"):
+
+        """On vérifie que la potion consommée n'augemente pas trop la statistique concernée"""
+        if(use_conso.stat == "HP"): #Cas des HP
             if self.stat.HP > self.stat.max_HP :
                 print("Surplus de HP")
                 self.stat.HP = self.stat.max_HP
 
-        elif(use_conso.stat == "MP"):
+
+        elif(use_conso.stat == "MP"): #Cas des MP
             if self.stat.MP > self.stat.max_MP :
                 print("Surplus de MP")
                 self.stat.MP = self.stat.max_MP
         
-        elif(use_conso.stat == "dodge"):
+        elif(use_conso.stat == "dodge"): #Cas de dodge
             if self.stat.dodge > 99:
                 print("Vous ne pouvez pas avoir une chance d'esquiver superieure a 99")
                 self.stat.dodge = save
 
-        elif(use_conso.stat == "parry"):
+        elif(use_conso.stat == "parry"): #Cas de parry
             if self.stat.parry > 99:
                 print("Vous ne pouvez pas avoir une chance de parer superieure a 99")
                 self.stat.parry = save
@@ -270,20 +282,33 @@ class Joueur(Character):
         print("Vous avez maintenant : ",self.stat.__getattribute__(use_conso.stat),use_conso.stat)
 
     def getExp(self):
+        """Ajouter à l'utilisateur les points d'expérience nécessaires"""
         self.addExp(self.stat.addExp)
 
     def addExp(self,xpPoint):
-
+        """Ajoute xpPoint à xpBar"""
         self.stat.xpBar -= xpPoint
+
+        """Si xpBar est <= 0 le joueur va passer un niveau"""
         if(self.stat.xpBar <= 0):
             surplus = self.stat.xpBar
 
             self.newLevel()
+
+            '''Il peut y avoir un surplus d'xpPoint'''
             self.addExp(-surplus)
             return 0
         print("Your level is ",self.stat.level)
 
     def get_loot(self, monster):
+        """
+        Récupére l'équipement que possède monster
+        Il ne peut reprendre qu'un seul équipement
+        L'or que possède monster est automatiquement ajouté
+        """
+        self.inventory.add_gold(monster.inventory.get_gold())
+
+        """Afficher les objets de monster"""
         list_object = list()
         indice = 1
         for loot in monster.inventory.get_all_objects():
@@ -296,7 +321,7 @@ class Joueur(Character):
             list_choice.append(str(i))
         list_choice.append('passer')
 
-
+        """Choix du joueur"""
         choix_valide = False
         while (not choix_valide):
             print("\nQuel objet voulez vous prendre?")
@@ -323,20 +348,30 @@ class Monster(Character):
         self.set_stat()
         self.add_loot()
 
+
     def add_loot(self):
+        """
+        Ajoute le loot que laisse Monster
+        """
+
+        """Ajoute de l'or suivant le niveau du joueur"""
         for i in range(0, self.get_level()):
             self.inventory.add_gold(randint(20, 100))
 
         equip_number = randint(1,3)
+        """Ajoute entre 1 et 3 objets à l'inventaire de Monster"""
         for i in range(0,equip_number):
             type_equip = randint(1,3)
-            if(type_equip == 1):
+
+
+            if(type_equip == 1):    #Ajoute une arme
                 object = Weapon()
-            elif(type_equip == 2):
+            elif(type_equip == 2):  #Ajoute une armure
                 object = Armor()
-            else:
+            else:                   #Ajoute une potion
                 object = Potion("new",100,self)
-            try:
+
+            try:                    #Met au niveau du joueur l'équipement
                 object.set_level(self.get_level())
             except:
                 a = 1
@@ -345,6 +380,11 @@ class Monster(Character):
 
 
     def load(self, nom, level_player):
+        """
+        Charge les données d'un monstre s'appelant nom
+        Puis met ses statistiques au niveau du joueur
+        """
+
         DATA_PATH = "Monster/"
         file = open(DATA_PATH + "Data_monstre.json")
         data = json.load(file)
@@ -353,6 +393,8 @@ class Monster(Character):
         self.nom = nom
 
         list_attr = self.stat.__dict__.items()
+
+        """Extrait les informations du fichier"""
         for attr in list_attr:
             if (attr[0] == "level"):
                 break
@@ -364,23 +406,30 @@ class Monster(Character):
                 dmg_sup = data[nom]["damage_sup"]
                 self.stat.__setattr__(attr[0], (dmg_inf, dmg_sup))
 
+        """Appelle la fonction de mise à niveau de Monster"""
         self.set_level(level_player)
 
         
     def set_stat(self):
+        """
+        Utilisée dans la fonction init permet de créer un monstre aléatoire
+        """
         DATA_PATH = "Monster/"
         file = open(DATA_PATH + "Data_monstre.json")
         data = json.load(file)
         file.close()
 
         list_monsters = list()
+        """Récupére la liste des monstres dans le fichier"""
         for monstre in data:
             list_monsters.append(monstre)
 
+        """Choisi un monstre au hasard"""
         monster_choice = randint(0,len(list_monsters) - 1)
 
         self.nom = list_monsters[monster_choice]
 
+        """Récupére les informations"""
         list_attr = self.stat.__dict__.items()
         for attr in list_attr:
             if (attr[0] == "level"):
@@ -394,6 +443,7 @@ class Monster(Character):
                 self.stat.__setattr__(attr[0], (dmg_inf, dmg_sup))
 
     def set_level(self,joueur_level):
+        """Met les statistiques de Monster au même niveau que le joueur"""
         self.stat.level = joueur_level
         for i in range(0, joueur_level):
             self.stat.HP = int(self.stat.HP * 1.6)
@@ -462,16 +512,25 @@ class Statistic():
         self.type_proprio = type_proprio
 
     def save(self):
+        """
+        Sauvegarde les statistiques
+        :return: dictionnaire avec les différentes informations
+        """
         data ={}
         for attr in self.__dict__.keys():
             data[attr] = self.__getattribute__(attr)
         return data
 
     def load(self, data):
+        """Charge les statistiques via les infos fournies dans data"""
         for attr in self.__dict__.keys():
             self.__setattr__(attr,data[attr])
 
     def newLevel(self):
+        """
+        Montée de niveau
+        Les statistiques sont augmentées
+        """
         self.max_HP = int(self.HP * 1.6)
         self.HP = self.max_HP
         self.max_MP = int(self.MP * 1.6)
@@ -484,6 +543,7 @@ class Statistic():
         self.damage = (1, int(self.damage[1] * 1.6))
 
     def __str__(self):
+        """Le texte à afficher"""
         texte = ""
         texte += "HP : " + str(self.HP) + "/" + str(self.max_HP)
         texte += "\nMP : " + str(self.MP) + "/" + str(self.max_MP)
@@ -492,6 +552,8 @@ class Statistic():
         texte += "\nChance of parry : " + str(self.parry)
         texte += "\nChance of critical : " + str(self.critical)
         texte += "\nRange of damages : [" + str(self.damage[0]) + '-' + str(self.damage[1]) + ']'
+
+        """Si le propriétaire est un Joueur on affiche certaine informations"""
         if(self.type_proprio == 'Joueur'):
             texte += "\n\n<<<<<STATISTICS>>>>>\n\n"
             texte += "Games played : " + str(self.games_played)
@@ -504,21 +566,27 @@ class Statistic():
         return texte
 
     def mons_killed(self,nb):
+        """Augmente la statistique nombre de monstres tués"""
         self.mons_kills += nb
 
     def biome_found(self):
+        """Augmente la statistique nombre de salles visitées"""
         self.biome_disc += 1
 
     def new_game(self):
+        """Augmente la statistique nombre de jeux réalisés"""
         self.games_played += 1
 
     def game_finish(self):
+        """Augmente la statistique nombre de donjons finis"""
         self.games_finished += 1
 
     def new_weapon(self):
+        """Augmente la statistique nombre d'armes trouvées"""
         self.weapon_found += 1
 
     def new_armor(self):
+        """Augmente la statistique nombre d'armures trouvées"""
         self.armor_found += 1
 
     def add_bonus(self, stat, value):
