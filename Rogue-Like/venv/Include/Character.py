@@ -113,11 +113,16 @@ class Character():
         self.print_MP()
         degat = spell.dmg
         result = 3
+
+        """On vérifie si la cible esquive"""
         if not cible.can_avoid():
+
+            """On vérifie si l'attaque est critique"""
             if self.is_critic():
                 result = 2
                 degat *= 2
 
+            """On vérifie si la cible pare"""
             if cible.can_parry():
                 degat -= int(cible.stat.shield_point * 0.7)
                 print(cible.nom,"pare")
@@ -131,13 +136,16 @@ class Character():
             result = 0
         return result
 
+
     def can_use_spell(self, spell):
+        """Vérifie si Character peut lancer un sort"""
         if(self.stat.MP < spell.MP_cost):
             return False
         else:
             return True
 
     def is_critic(self):
+        """Vérifie si Character fait un coup critique"""
         chance = randint(1,101)
         if chance <= self.stat.critical:
             return True
@@ -145,6 +153,7 @@ class Character():
             return False
 
     def can_avoid(self):
+        """Vérifie si Character réussi à esquiver"""
         chance = randint(1, 101)
         if chance <= self.stat.dodge:
             return True
@@ -152,6 +161,7 @@ class Character():
             return False
 
     def can_parry(self):
+        """Vérifie si Character pare une attaque"""
         chance = randint(1, 101)
         if chance <= self.stat.parry:
             return True
@@ -159,10 +169,11 @@ class Character():
             return False
 
     def get_level(self):
+        """Renvoie le level de Character"""
         return self.stat.level
 
     def __str__(self):
-
+        """Renvoie le texte à afficher"""
         texte = "Nom : " + self.nom
         texte += "\nLevel : " + str(self.stat.level)
         texte += "\nType : " + type(self).__name__ + '\n'
@@ -179,27 +190,33 @@ class Joueur(Character):
 
 
     def save(self):
+        """Permet de sauvegarder les informations de Joueur"""
         data={"nom":self.nom,"stat":self.stat.save()}
         self.inventory.save()
         SAVE_PATH = "Save/"
         file = open(SAVE_PATH+"player.json",'w')
         json.dump(data,file)
+        file.close()
 
     def load(self):
-
+        """Permet de charger les informations de la Dernière sauvegarde"""
         DATA_PATH = "Save/"
         file = open(DATA_PATH+"player.json",'r')
         data = json.load(file)
         self.nom = data["nom"]
         self.stat.load(data["stat"])
         self.inventory.load()
-
+        file.close()
 
     def newLevel(self):
+        """Appelle les fonctions nécessaires pour que les statistiques et les sorts s'adaptent au niveau du Joueur"""
         self.stat.newLevel()
         self.spell_book.new_level()
 
     def use_consumable(self):
+        """Permet d'utiliser une potion"""
+
+        """Le Joueur n'a rien dans son inventaire"""
         if(len(self.inventory.list_objects) == 0):
             print("You don't have anything in your inventory")
             return 0
@@ -331,6 +348,7 @@ class Monster(Character):
         DATA_PATH = "Monster/"
         file = open(DATA_PATH + "Data_monstre.json")
         data = json.load(file)
+        file.close()
 
         self.nom = nom
 
@@ -347,11 +365,13 @@ class Monster(Character):
                 self.stat.__setattr__(attr[0], (dmg_inf, dmg_sup))
 
         self.set_level(level_player)
+
         
     def set_stat(self):
         DATA_PATH = "Monster/"
         file = open(DATA_PATH + "Data_monstre.json")
         data = json.load(file)
+        file.close()
 
         list_monsters = list()
         for monstre in data:

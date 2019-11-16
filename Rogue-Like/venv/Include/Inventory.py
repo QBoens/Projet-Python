@@ -19,21 +19,25 @@ class Inventory():
         self.slot_weapon = [0,0]
         self.max_size = 10
 
-    def save(self):
-        data = {"objet":self.save_list(),"weapon":self.save_weapon(),"armor":self.save_armor()}
-        SAVE_PATH = "Save/"
-        file = open(SAVE_PATH + "inventory.json", 'w')
-        json.dump(data, file)
+
 
     def remove_object(self,object):
         for objet in self.list_objects:
             if object == objet:
                 self.list_objects.remove(objet)
+
+    def save(self):
+        data = {"objet":self.save_list(),"weapon":self.save_weapon(),"armor":self.save_armor()}
+        SAVE_PATH = "Save/"
+        file = open(SAVE_PATH + "inventory.json", 'w')
+        json.dump(data, file)
+        file.close()
+
     def load(self):
         DATA_PATH = "Save/"
         file = open(DATA_PATH + "inventory.json", 'r')
         data = json.load(file)
-
+        file.close()
         for elem in data:
 
             if elem == "objet":
@@ -201,6 +205,8 @@ class Inventory():
         return list_equip
 
     def equip_wa(self):
+        if len(self.list_objects) == 0:
+            return 0
         list_equip = self.list_equipment_possible()
         print("Vous pouvez vous équiper des objets suivant :")
         indice = 1
@@ -236,7 +242,7 @@ class Inventory():
 
         while not choix_valide:
             choix = input(texte)
-            if (choix != 'G' and choix != 'D'):
+            if (choix.upper() != 'G' and choix.upper() != 'D'):
                 print("Choix non valide")
 
             elif choix.upper() == 'D':
