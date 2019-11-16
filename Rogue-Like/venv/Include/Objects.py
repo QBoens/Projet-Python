@@ -1,5 +1,6 @@
 from random import randint
 import json
+
 class Item():
     def __init__(self, nom, gold_price):
         self.name = nom

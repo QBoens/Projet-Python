@@ -254,3 +254,5 @@ class Inventory():
         for object in self.list_objects:
             print(object)
 
+    def get_all_objects(self):
+        return self.list_objects

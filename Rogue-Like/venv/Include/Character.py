@@ -14,39 +14,51 @@ class Character():
 
 
     def print_HP(self):
+        """Print Character HP"""
         print("HP :",self.stat.HP,"/",self.stat.max_HP)
 
     def print_MP(self):
+        """Print Character MP"""
         print("MP :",self.stat.HP,"/",self.stat.max_MP)
 
     def get_HP(self):
+        """Return Character HP"""
         return self.stat.HP
     
     def get_MaxHP(self):
+        """Return Character MP"""
         return self.stat.max_HP
 
     def get_MaxMP(self):
+        """Return Character max HP"""
         return self.stat.max_MP
 
     def get_MP(self):
+        """Return Character max MP"""
         return self.stat.MP
 
     def get_level(self):
+        """Return Character level"""
         return self.stat.level
 
     def take_dmg(self, degats):
+        """HP points go downs by degats points"""
         self.stat.HP -= degats
+        self.is_dead()
 
     def is_dead(self):
+        """Check if character is dead"""
         if self.stat.HP <= 0:
             return True
         else:
             return False
 
     def weapon_equip(self):
+        """Show Character equiped weapon"""
         return self.inventory.slot_weapon
 
     def attack_phy(self, attack, cible):
+        """Character use an"""
         list_weapon = self.weapon_equip()
         deg_weapon = 0
 
@@ -211,13 +223,45 @@ class Joueur(Character):
             return 0
         print("Your level is ",self.stat.level)
 
+    def get_loot(self, monster):
+        list_object = list()
+        indice = 1
+        for loot in monster.inventory.get_all_objects():
+            print(indice,'-',loot.name)
+            indice += 1
+            list_object.append(loot)
+
+        list_choice = list()
+        for i in range(1, len(monster.inventory.get_all_objects()) + 1):
+            list_choice.append(str(i))
+        list_choice.append('passer')
+
+
+        choix_valide = False
+        while (not choix_valide):
+            print("\nQuel objet voulez vous prendre?")
+            choix_joueur = input("Ecrivez le numéro de l'objet ou écrivez passer si rien ne vous intéresse\n")
+            choix_joueur = choix_joueur.lower()
+            if (not list_choice.__contains__(choix_joueur)):
+                print("Ce n'est pas un choix valide")
+                continue
+
+            if list_choice.__contains__(choix_joueur) and choix_joueur != "passer":
+                break
+
+            if choix_joueur == "passer":
+                print("Au revoir")
+                return 0
+
+        self.inventory.add_object(list_object[int(choix_joueur) - 1])
+
 
 class Monster(Character):
     def __init__(self):
         name = "Nouveau"
         super().__init__(name)
         self.set_stat()
-        self.inventory.add_gold(randint(20,100))
+        self.add_loot()
 
     def add_loot(self):
         for i in range(0, self.get_level()):
@@ -225,13 +269,20 @@ class Monster(Character):
 
         equip_number = randint(1,3)
         for i in range(0,equip_number):
-            type_equip = randint(1,4)
+            type_equip = randint(1,3)
             if(type_equip == 1):
                 object = Weapon()
-            else:
+            elif(type_equip == 2):
                 object = Armor()
-            object.set_level(self.get_level())
+            else:
+                object = Potion("new",100,self)
+            try:
+                object.set_level(self.get_level())
+            except:
+                a = 1
             self.inventory.add_object(object)
+
+
 
     def load(self, nom, level_player):
         DATA_PATH = "Monster/"

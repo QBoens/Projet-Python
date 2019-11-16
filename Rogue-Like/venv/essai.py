@@ -10,6 +10,7 @@ import json
 def run():
     joueur = Joueur("Henri")
     monstre = Monster()
+    """
     joueur.addExp(5000)
     armure = Armor()
     armure2 = Armor()
@@ -36,12 +37,14 @@ def run():
     joueur.inventory.equip_armor(armure)
     joueur.inventory.equip_armor(armure2)
     """
+    """
     joueur.inventory.add_object(arme)
     joueur.inventory.add_object(arme2)
     """
     """
     joueur.inventory.equip_weapon_R(arme)
     joueur.inventory.equip_weapon_G(arme2)
+    """
     """
     joueur.inventory.add_object(Potion3)
     joueur.save()
@@ -53,6 +56,9 @@ def run():
     joueur2.stat.parry = 96
     joueur2.stat.dodge = 96
     joueur2.use_consumable()
+    """
+    joueur.get_loot(monstre)
+    joueur.inventory.list_of_objects()
     return 0
 
 run()
