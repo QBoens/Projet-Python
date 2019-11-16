@@ -9,7 +9,7 @@ import json
 
 def run():
     joueur = Joueur("Henri")
-    monstre = Monster("Nouveau")
+    monstre = Monster()
     joueur.addExp(5000)
     armure = Armor()
     armure2 = Armor()
@@ -27,7 +27,7 @@ def run():
     Potion3 = Potion("Nouveau", 12, joueur)
 
     joueur.inventory.add_object(Potion1)
-    joueur.inventory.add_object(armure)
+    #joueur.inventory.add_object(armure)
 
     armure.set_level(joueur.get_level())
     armure2.set_level(joueur.get_level())
@@ -35,22 +35,24 @@ def run():
     armure2.lvl = 1
     joueur.inventory.equip_armor(armure)
     joueur.inventory.equip_armor(armure2)
-
+    """
     joueur.inventory.add_object(arme)
     joueur.inventory.add_object(arme2)
-
+    """
+    """
     joueur.inventory.equip_weapon_R(arme)
     joueur.inventory.equip_weapon_G(arme2)
-
+    """
     joueur.inventory.add_object(Potion3)
     joueur.save()
 
     joueur2 = Joueur("Nouveau")
     joueur2.load()
 
-    #joueur2.inventory.armor_equiped()
-    for armor in joueur2.inventory.list_equiped_armor():
-        print(armor)
+    joueur2.stat.HP = 1
+    joueur2.stat.parry = 96
+    joueur2.stat.dodge = 96
+    joueur2.use_consumable()
     return 0
 
 run()

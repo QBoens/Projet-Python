@@ -46,7 +46,7 @@ class Character():
     def weapon_equip(self):
         return self.inventory.slot_weapon
 
-    def attack_phy(self, cible):
+    def attack_phy(self, attack, cible):
         list_weapon = self.weapon_equip()
         deg_weapon = 0
 
@@ -54,16 +54,29 @@ class Character():
             deg_weapon += weapon.dg_bonus
 
         if not cible.can_avoid():
-            if not cible.can_parry():
-                degat = randint(self.stat.damage[0], self.stat.damage[1])
+            degat = randint(self.stat.damage[0], self.stat.damage[1])
+            degat += attack.dmg
+            degat += deg_weapon
+            if self.is_critic():
+                degat *= 2
 
-                degat += deg_weapon
-                if self.is_critic():
-                    degat *= 2
+            if cible.can_parry():
                 degat -= cible.stat.shield
-                cible.take_dmg(degat)
-            else:
-                degat = 0
+
+            cible.take_dmg(degat)
+
+
+    def attack_mag(self, spell, cible):
+        degat = spell.dmg
+        if not cible.can_avoid():
+            if self.is_critic():
+                degat *= 2
+
+            if cible.can_parry():
+                degat -= cible.stat.shield
+
+            cible.take_dmg(degat)
+
 
     def is_critic(self):
         chance = randint(1,101)
