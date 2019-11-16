@@ -52,7 +52,7 @@ class Weapon(Equipments):
 
 
     def set_level(self, lvl_joueur):
-        self.lvl = lvl_joueur + 2
+        self.lvl = lvl_joueur
         for i in range(0, lvl_joueur):
             self.dg_bonus = int(self.dg_bonus * 1.5)
 
@@ -89,7 +89,7 @@ class Armor(Equipments):
         return texte
 
     def set_level(self, lvl_joueur):
-        self.lvl = lvl_joueur + 2
+        self.lvl = lvl_joueur
         for i in range(0, lvl_joueur):
             self.df_bonus = int(self.df_bonus * 1.4)
 

@@ -531,9 +531,9 @@ class Statistic():
         Montée de niveau
         Les statistiques sont augmentées
         """
-        self.max_HP = int(self.HP * 1.6)
+        self.max_HP = int(self.max_HP * 1.6)
         self.HP = self.max_HP
-        self.max_MP = int(self.MP * 1.6)
+        self.max_MP = int(self.max_MP * 1.6)
         self.MP = self.max_MP
         self.level += 1
         self.nextLevel = pow(self.level, 2) * 10
