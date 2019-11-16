@@ -402,6 +402,7 @@ class Statistic():
         self.HP = self.max_HP
         self.max_MP = 100
         self.MP = self.max_MP
+        self.dodge = randint(1, 101)
         self.shield_point = 10
         self.dodge = randint(1, 25)
         self.parry = randint(25, 75)

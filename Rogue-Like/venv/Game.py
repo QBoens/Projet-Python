@@ -23,13 +23,13 @@ if __name__ == "__main__":
         elif(Input == "2"):
             list_dir = os.listdir(SAVE_PATH)
             Player_load = False
-            Map_Load = False
+            Map_load = False
             for i in range(0,len(list_dir)):
                 if(list_dir[i] == "player.json"):
                     Player_load = True
                 if(list_dir[i] == "map.json"):
                     Map_load = True
-            if(Player_load == True and Map_Load == True):
+            if(Player_load == True and Map_load == True):
                 player.load()
                 map = Map(player)
                 map.Load()
