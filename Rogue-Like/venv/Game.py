@@ -2,6 +2,8 @@ from Include.Map import Map
 from Include.Character import Joueur
 import os
 
+SAVE_PATH = "./Save"
+
 if __name__ == "__main__":
     os.system("cls")
     player = Joueur("Link")
@@ -19,7 +21,18 @@ if __name__ == "__main__":
             Input = ""
             print("THE GAME\n\n1: New Game\n2: Load Game\n3: Quit")
         elif(Input == "2"):
-            if(map.Load()):
+            list_dir = os.listdir(SAVE_PATH)
+            Player_load = False
+            Map_Load = False
+            for i in range(0,len(list_dir)):
+                if(list_dir[i] == "player.json"):
+                    Player_load = True
+                if(list_dir[i] == "map.json"):
+                    Map_load = True
+            if(Player_load == True and Map_Load == True):
+                player.load()
+                map = Map(player)
+                map.Load()
                 map.Play()
                 map.Save()
                 os.system("cls")

@@ -120,6 +120,7 @@ class Map():
         return True
     #Save the map in a Json file
     def Save(self):
+        self.Player.save()
         #TO ADD: Call a function in player to save his stat and objects
         js = {"StartingRoom" : 0, "PlayerPosition" : 0, "Rooms":[]}
         js["StartingRoom"] = self.StartingRoom
@@ -176,7 +177,22 @@ class Map():
                         if(player_Turn):
                             pass
                         else:
-                            pass
+                            monster.attack_phy(self.Player)
+                            os.system("cls")
+                            self.Print_PlayerStat()
+                    if(monster.is_dead()):
+                        pass
+                    else:
+                        self.Player.revive() #REVIVE THE PLAYER
+                        self.Generate() #CREATE A NEW DUNGEON
+                        Input = ""
+                        while(Input != "1" or Input != "2"):
+                            print("GAME OVER\n\n1: Continue\n2: Quit")
+                        if(Input == "1"):
+                            self.Play()
+                            break
+                        if(Input == "2"):
+                            break
                     Input = ""
             else:
                 print("What do you want to do?\n\n1: Inventory\n2: Move to the next room\n3: Exit game")
@@ -197,8 +213,6 @@ class Map():
                 if(Input == "3"):
                     break
                 Input = ""
-            
-            #TODO: Ask the player if it want to save and quit or continue
 
             os.system("cls")
             if(len(self.Rooms[self.PlayerPosition].get_NextRooms()) == 2):

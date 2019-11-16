@@ -13,6 +13,9 @@ class Character():
         self.stat = Statistic(type(self).__name__)
 
 
+    def revive(self):
+        self.stat.HP = self.stat.max_HP
+
     def print_HP(self):
         print("HP :",self.stat.HP,"/",self.stat.max_HP)
 
