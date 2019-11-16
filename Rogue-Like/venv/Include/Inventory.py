@@ -24,6 +24,10 @@ class Inventory():
         file = open(SAVE_PATH + "inventory.json", 'w')
         json.dump(data, file)
 
+    def remove_object(self,object):
+        for objet in self.list_objects:
+            if object == objet:
+                self.list_objects.remove(objet)
     def load(self):
         DATA_PATH = "Save/"
         file = open(DATA_PATH + "inventory.json", 'r')
@@ -93,6 +97,7 @@ class Inventory():
         list_equip = list()
 
         for armor in self.slot_armor:
+            print(self.slot_armor[armor])
             if(self.slot_armor[armor]!="aucune"):
                 list_equip.append(self.slot_armor[armor])
 
@@ -219,7 +224,7 @@ class Inventory():
         else:
             self.slot_armor[armor.type] = armor
 
-        self.armor_equiped()
+
 
 
     def can_equip(self,equipment):
@@ -262,5 +267,5 @@ class Inventory():
         armor_point = 0
         for armor in self.list_equiped_armor():
             armor_point += armor.df_bonus
-
+        print("armor_point :",armor_point)
         return armor_point

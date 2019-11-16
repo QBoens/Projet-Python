@@ -81,7 +81,8 @@ class Character():
                 result = 2
                 degat *= 2
 
-            if cible.can_parry():
+            if True:
+            #if cible.can_parry():
                 result = 1
                 degat -= cible.stat.shield_point
                 if (type(cible).__name__ == 'Joueur'):
@@ -210,6 +211,7 @@ class Joueur(Character):
                 choix_valide = True
 
         use_conso = consumables_lists[choix_joueur - 1]
+        self.inventory.remove_object(consumables_lists[choix_joueur - 1])
         save = self.stat.__getattribute__(use_conso.stat)
         self.stat.__setattr__(use_conso.stat, self.stat.__getattribute__(use_conso.stat) + use_conso.value)
         if(use_conso.stat == "HP"):
