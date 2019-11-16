@@ -65,20 +65,30 @@ class Character():
         list_weapon = self.weapon_equip()
         deg_weapon = 0
 
+        """
+        On récupére les dégats qu'infligent les armes
+        """
         for weapon in list_weapon:
-            deg_weapon += weapon.dg_bonus
+            if not type(weapon).__name__== 'int':
+                deg_weapon += weapon.dg_bonus
 
         if not cible.can_avoid():
             degat = randint(self.stat.damage[0], self.stat.damage[1])
-            degat += attack.dmg
+            if (type(self).__name__ == 'Joueur'):
+                degat += attack.dmg
             degat += deg_weapon
             if self.is_critic():
                 degat *= 2
 
             if cible.can_parry():
-                degat -= cible.stat.shield
+                print(cible.nom, "pare l'attaque")
+                degat -= cible.stat.shield_point
+                if (type(cible).__name__ == 'Joueur'):
+                    degat -= self.inventory.get_armor_point()
 
             cible.take_dmg(degat)
+        else:
+            print(cible.nom,"esquive l'attaque")
 
 
     def attack_mag(self, spell, cible):
@@ -88,7 +98,10 @@ class Character():
                 degat *= 2
 
             if cible.can_parry():
-                degat -= cible.stat.shield
+                degat -= cible.stat.shield_point
+
+                if(type(cible).__name__ == 'Joueur'):
+                    degat -= self.inventory.get_armor_point()
 
             cible.take_dmg(degat)
 

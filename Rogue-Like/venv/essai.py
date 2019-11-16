@@ -10,6 +10,9 @@ import json
 def run():
     joueur = Joueur("Henri")
     monstre = Monster()
+    armure = Armor()
+    armure.lvl = 1
+    joueur.inventory.equip_armor(armure)
     """
     joueur.addExp(5000)
     armure = Armor()
@@ -57,8 +60,12 @@ def run():
     joueur2.stat.dodge = 96
     joueur2.use_consumable()
     """
-    joueur.get_loot(monstre)
-    joueur.inventory.list_of_objects()
+    #joueur.spell_book.list_of_spells()
+    joueur.attack_phy(joueur.spell_book.list_spells[0], monstre)
+    liste = joueur.spell_book.get_list_of_spells()
+    monstre.attack_phy("basique",joueur)
+    monstre.print_HP()
+    joueur.print_HP()
     return 0
 
 run()

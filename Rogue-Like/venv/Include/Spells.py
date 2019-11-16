@@ -27,6 +27,9 @@ class Spell_book():
         for spell in self.list_spells:
             print(spell,end='\n\n')
 
+    def get_list_of_spells(self):
+        return self.list_spells
+
 
 class Spell():
     def __str__(self):

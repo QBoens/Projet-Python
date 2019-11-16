@@ -256,3 +256,10 @@ class Inventory():
 
     def get_all_objects(self):
         return self.list_objects
+
+    def get_armor_point(self):
+        armor_point = 0
+        for armor in self.list_equiped_armor():
+            armor_point += armor.df_bonus
+
+        return armor_point
