@@ -239,6 +239,7 @@ class Map():
                             os.system("cls")
                     if(monster.is_dead()):
                         self.Player.get_loot(monster)
+                        self.Player.getExp()
                         self.Rooms[self.PlayerPosition].Character = ""
                         player_Turn = True
                         os.system("cls")
