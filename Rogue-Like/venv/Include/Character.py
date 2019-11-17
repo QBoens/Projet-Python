@@ -7,6 +7,9 @@ from random import randint
 import json
 
 class Character():
+    """
+    Classe qui permet de créer les différents personnages du jeu
+    """
     def __init__(self, nom):
         self.nom = nom
         self.inventory = Inventory(self)
@@ -184,6 +187,9 @@ class Character():
 
 
 class Joueur(Character):
+    """
+    Classe qui correspond au joueur
+    """
     def __init__(self, name):
         super().__init__(name)
         self.spell_book = Spell_book()
@@ -342,6 +348,9 @@ class Joueur(Character):
 
 
 class Monster(Character):
+    """
+    Classe des monstres qu'affronte le joueur
+    """
     def __init__(self):
         name = "Nouveau"
         super().__init__(name)
@@ -455,6 +464,10 @@ class Monster(Character):
 
 
 class Merchant(Character):
+    """
+    Classe du marchant qui peut vendre au joueur des objets
+    N'a pas été implémentée dans le jeu
+    """
     def __init__(self, section):
         config = configparser.ConfigParser()
         config.read("NPC/Fichier_conf_NPC.ini")
@@ -486,6 +499,9 @@ class Merchant(Character):
                 break
 
 class Statistic():
+    """
+    Classe qui contient toutes les statistiques d'un Character
+    """
     def __init__(self,type_proprio):
         self.max_HP = 100
         self.HP = self.max_HP

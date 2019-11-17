@@ -3,6 +3,9 @@ import json
 from Include.Objects import *
 
 class Inventory():
+    """
+    Classe qui correspond à l'inventaire d'un Character
+    """
     def __init__(self, proprio):
         self.proprio = proprio
         self.list_objects = list()
@@ -164,7 +167,6 @@ class Inventory():
 
 
     def equip_weapon_G(self, weapon):
-
         """Equipe weapon dans la main gauche"""
         if type(self.proprio).__name__ == "Joueur":
             """Vérifie si le joueur peut s'équiper de cette arme"""
@@ -283,17 +285,21 @@ class Inventory():
                 break
 
     def add_object(self, object):
+        """Ajoute object à la liste des objets"""
         self.list_objects.append(object)
 
     def get_gold(self):
+        """Renvoie les gold possédés"""
         return self.amount_gold
 
     def add_gold(self, quantity):
+        """Ajoute quantity à aux gold possédés"""
         self.amount_gold += quantity
         if(type(self.proprio).__name__ == 'Joueur'):
             print("You have now :", self.get_gold(),"gold")
 
     def can_spend(self, quantity):
+        """Vérifie si Character peut dépenser quantity de gold"""
         if(quantity <= self.amount_gold):
             return True
         else:
@@ -305,18 +311,26 @@ class Inventory():
             print("You still have :", self.get_gold(), "gold")
         else:
             print("You can't spend that much!")
-            print("You have no :", self.get_gold(), "gold")
+            print("You have now :", self.get_gold(), "gold")
 
     def equip_armor(self, armor):
+        """Equipe armor à Character"""
+
+        """Vérifie si le propriétaire de l'inventaire est un joueur"""
         if type(self.proprio).__name__ == "Joueur":
+            """Vérifie si le joueur peut s'équiper de l'armure"""
             if self.can_equip(armor):
-                if self.slot_armor[armor.type]=="aucune":
+
+
+                if self.slot_armor[armor.type]=="aucune":   #Cas où il n'y a pas d'armure équipée sur le slot d'armure
                     self.slot_armor[armor.type] = armor
 
                     print("You are now equiped with :", self.slot_armor[armor.type].name)
                     self.remove_object(armor)
-                else:
+                else:                                       #Cas où il y a une armure équipée sur le slot d'armure
                     print("Actually you have ",self.slot_armor[armor.type].name,"equiped")
+
+                    """Demande au joueur s'il veut changer d'armure"""
                     choix_valide = False
                     texte = "Do you want to change this armor ?"
                     texte += "\ny-yes\tn-no\n"
@@ -326,15 +340,16 @@ class Inventory():
                         if (replace != 'y' and replace != 'n'):
                             print("Ce choix n'est pas valide")
 
-                        elif (replace == "y"):
+                        elif (replace == "y"):      #Cas où le joueur veut remplacer l'armure
                             self.slot_armor[armor.type] = armor
                             print("You are now equiped with :", self.slot_armor[armor.type].name)
                             self.remove_object(armor)
                             choix_valide = True
-                        else:
+                        else:                       #Cas où le joueur ne veut pas remplacer l'armure
                             print("Armor hasn't been replaced")
                             choix_valide = True
             else:
+                """L'armure ne peut pas être équipée"""
                 print(armor.name, " can't be equiped")
 
         else:
@@ -344,12 +359,14 @@ class Inventory():
 
 
     def can_equip(self,equipment):
+        """Vérifie que le propriétaire peut s'équiper de cet equipment"""
         if self.proprio.get_level() >= equipment.get_level():
             return True
         else:
             return False
 
     def armor_equiped(self):
+        """Affiche la liste des armures équipées"""
         for elem in self.slot_armor.keys():
             try:
                 texte = self.slot_armor.get(elem).get_name()
@@ -358,28 +375,33 @@ class Inventory():
             print(texte)
 
     def weapon_equiped(self):
+        """Affiche els armes équipées"""
         print("Equiped weapons :")
-
         print("\tLeft Hand : ", self.slot_weapon[0])
         print("\tRight Hand : ", self.slot_weapon[1])
 
     def sell_object(self, object):
+        """Permet de vendre object"""
         self.list_objects.remove(object)
         print("You selt :",object)
         self.add_gold(object.price)
 
     def list_equiped_weapon(self):
+        """Renvoie la liste des armes équipées"""
         return self.slot_weapon
 
     def list_of_objects(self):
+        """Affiche la liste des objets possédées"""
         print("List of objects:")
         for object in self.list_objects:
             print(object)
 
     def get_all_objects(self):
+        """Renvoie la liste des objets possédées"""
         return self.list_objects
 
     def get_armor_point(self):
+        """Récupére les points de défense fournies par l'armure"""
         armor_point = 0
         for armor in self.list_equiped_armor():
             try:
@@ -389,6 +411,7 @@ class Inventory():
         return armor_point
 
     def list_equiped_armor(self):
+        """Renvoie la liste des armures équipes"""
         list_equip = list()
 
         for elem in self.slot_armor.keys():
