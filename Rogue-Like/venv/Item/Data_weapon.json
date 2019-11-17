@@ -8,13 +8,13 @@
 	"Epee longue":
 	{
 		"gold_price":30,
-		"min_lvl":2,
+		"min_lvl":1,
 		"damage": 20
 	},
 	"Masse lourde":
 	{
 		"gold_price":35,
-		"min_lvl":2,
+		"min_lvl":1,
 		"damage": 30
 	}
 }
