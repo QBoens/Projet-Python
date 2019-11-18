@@ -356,6 +356,7 @@ class Monster(Character):
         super().__init__(name)
         self.set_stat()
         self.add_loot()
+        self.display = ""
 
 
     def add_loot(self):

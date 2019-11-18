@@ -24,6 +24,7 @@ class Inventory():
 
 
 
+
     def remove_object(self,object):
         """Supprime object de la liste des objets"""
         if not object in self.list_objects:

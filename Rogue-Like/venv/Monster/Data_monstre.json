@@ -10,7 +10,8 @@
 		"parry" : 25,
 		"critical" : 25,
 		"damage_inf" : 1,
-		"damage_sup" : 10
+		"damage_sup" : 10,
+		"display":""
 	},
 	"Squelettor":
 	{
@@ -23,7 +24,8 @@
 		"parry" : 40,
 		"critical" : 30,
 		"damage_inf" : 1,
-		"damage_sup" : 15
+		"damage_sup" : 15,
+		"display":""
 	},
 	"Slime":
 	{
@@ -36,6 +38,7 @@
 		"parry" : 15,
 		"critical" : 15,
 		"damage_inf" : 1,
-		"damage_sup" : 20
+		"damage_sup" : 20,
+		"display":""
 	}
 }
