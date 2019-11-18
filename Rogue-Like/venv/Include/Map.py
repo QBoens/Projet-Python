@@ -70,7 +70,7 @@ class Map():
         while(len(buffer) != 0):
             for i in range(0,buffer[0][1]):
                 intro_line = intro_lines[random.randint(0,len(intro_lines)-1)]
-                if(random.choice([True,False])):
+                if(random.randint(0,100) <= 75):
                     monster = "monster"
                 else:
                     monster = ""
@@ -91,7 +91,7 @@ class Map():
                         else:
                             self.Rooms[len(self.Rooms)-2].Add_NextRoom([self.Rooms[len(self.Rooms)-1].get_ID(),self.Rooms[len(self.Rooms)-2].get_NextRooms()[0][1]])
             buffer.pop(0)
-            chance -= 1
+            chance -= 2
         
         self.StartingRoom = 0 
         self.PlayerPosition = self.StartingRoom
@@ -179,14 +179,14 @@ class Map():
                         if(player_Turn):
                             Input = ""
                             self.Print_PlayerStat()
-                            print(str(monster.nom)+"\nLVL: "+str(monster.get_level())+"\nHP: "+str(monster.get_HP())+"/"+str(monster.get_MaxHP())+"\n")
+                            print(str(monster.nom)+"\nLVL: "+str(monster.get_level())+"\nHP: "+str(monster.get_HP())+"/"+str(monster.get_MaxHP())+"\n\n"+str(monster.show()))
                             print("What do you do?\n\n1: Slam\n2: Furious Slash\n3: Estoc\n4: Bladestorm\n5: Fireball\n6: Lightning\n7: Ice Spear\n8: Earth Fist")
                             while(Input != "1" and Input != "2" and Input != "3" and Input != "4" and Input != "5" and Input != "6" and Input != "7" and Input != "8"):
                                 Input = input()
                                 if(Input != "1" and Input != "2" and Input != "3" and Input != "4" and Input != "5" and Input != "6" and Input != "7" and Input != "8"):
                                     os.system("cls")
                                     self.Print_PlayerStat()
-                                    print(str(monster.nom)+"\nLVL: "+str(monster.get_level())+"\nHP: "+str(monster.get_HP())+"/"+str(monster.get_MaxHP())+"\n")
+                                    print(str(monster.nom)+"\nLVL: "+str(monster.get_level())+"\nHP: "+str(monster.get_HP())+"/"+str(monster.get_MaxHP())+"\n\n"+str(monster.show()))
                                     print("What do you do?\n\n1: Slam\n2: Furious Slash\n3: Estoc\n4: Bladestorm\n5: Fireball\n6: Lightning\n7: Ice Spear\n8: Earth Fist")
                                     Input = ""
                             spell_list = self.Player.spell_book.get_list_of_spells()
@@ -209,7 +209,7 @@ class Map():
                             Input = ""
                             os.system("cls")
                             self.Print_PlayerStat()
-                            print(str(monster.nom)+"\nLVL: "+str(monster.get_level())+"\nHP: "+str(monster.get_HP())+"/"+str(monster.get_MaxHP())+"\n")
+                            print(str(monster.nom)+"\nLVL: "+str(monster.get_level())+"\nHP: "+str(monster.get_HP())+"/"+str(monster.get_MaxHP())+"\n\n"+str(monster.show()))
                             if(code == 3):
                                 print(str(monster.nom)+" TOOK DAMAGE")
                             elif(code == 2):
@@ -226,7 +226,7 @@ class Map():
                             code = monster.attack_phy("",self.Player)
                             os.system("cls")
                             self.Print_PlayerStat()
-                            print(str(monster.nom)+"\nLVL: "+str(monster.get_level())+"\nHP: "+str(monster.get_HP())+"/"+str(monster.get_MaxHP())+"\n")
+                            print(str(monster.nom)+"\nLVL: "+str(monster.get_level())+"\nHP: "+str(monster.get_HP())+"/"+str(monster.get_MaxHP())+"\n\n"+str(monster.show()))
                             if(code == 3):
                                 print("YOU TOOK DAMAGE")
                             elif(code == 2):
@@ -249,11 +249,15 @@ class Map():
                         self.Generate() #CREATE A NEW DUNGEON
                         Input = ""
                         while(Input != "1" and Input != "2"):
+                            os.system("cls")
                             print("GAME OVER\n\n1: Continue\n2: Quit")
+                            Input = input()
                         if(Input == "1"):
+                            os.system("cls")
                             self.Play()
                             break
                         if(Input == "2"):
+                            os.system("cls")
                             break
                     Input = ""
                 self.Print_PlayerStat()
@@ -335,4 +339,18 @@ class Map():
             elif(len(self.Rooms[self.PlayerPosition].get_NextRooms()) == 1):
                 self.PlayerPosition = self.Rooms[self.PlayerPosition].get_NextRooms()[0][0]
             else:
-                is_end = True
+                os.system("cls")
+                self.Generate() #CREATE A NEW DUNGEON
+                Input = ""
+                while(Input != "1" and Input != "2"):
+                    os.system("cls")
+                    print("GAME OVER\n\n1: Continue\n2: Quit")
+                    Input = input()
+                if(Input == "1"):
+                    os.system("cls")
+                    self.Generate()
+                    self.Play()
+                    break
+                if(Input == "2"):
+                    os.system("cls")
+                    break
