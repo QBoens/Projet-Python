@@ -1,1 +1,1 @@
-{"objet": {"Potion for dodge": {"gold_price": 12, "stat": "dodge", "value": 5, "Classe": "Potion"}, "Potion for HP": {"gold_price": 12, "stat": "HP", "value": 5155, "Classe": "Potion"}}, "weapon": {"Gauche": 0, "Droite": 0}, "armor": {"Steel pants": {"gold_price": 10, "lvl": 1, "df_bonus": 1183, "type": 3, "Classe": "Armor"}, "Leather boots": {"gold_price": 10, "lvl": 1, "df_bonus": 158, "type": 5, "Classe": "Armor"}}}
+{"objet": {}, "weapon": {"Gauche": 0, "Droite": 0}, "armor": {}}
