@@ -23,7 +23,9 @@ class Inventory():
         self.max_size = 10
 
 
-
+    def equiped(self):
+        self.weapon_equiped()
+        self.armor_equiped()
 
     def remove_object(self,object):
         """Supprime object de la liste des objets"""
@@ -237,6 +239,9 @@ class Inventory():
 
     def equip_wa(self):
         """Fonction pour équiper un objet possédé"""
+
+        self.equiped()
+
         if len(self.list_objects) == 0:
             return 0
 
@@ -373,18 +378,28 @@ class Inventory():
 
     def armor_equiped(self):
         """Affiche la liste des armures équipées"""
+        print("Armors equiped")
         for elem in self.slot_armor.keys():
             try:
                 texte = self.slot_armor.get(elem).get_name()
             except AttributeError :
-                texte = self.slot_armor.get(elem)
+                texte = ""
             print(texte)
 
     def weapon_equiped(self):
         """Affiche els armes équipées"""
         print("Equiped weapons :")
-        print("\tLeft Hand : ", self.slot_weapon[0])
-        print("\tRight Hand : ", self.slot_weapon[1])
+        if self.slot_weapon[0] == 0:
+            texte = "aucune"
+        else:
+            texte = ""+ str(self.slot_weapon[0])
+        print("Left Hand : \n", texte)
+
+        if self.slot_weapon[1] == 0:
+            texte = "aucune"
+        else:
+            texte = ""+ str(self.slot_weapon[1])
+        print("Right Hand : \n", texte)
 
     def sell_object(self, object):
         """Permet de vendre object"""
