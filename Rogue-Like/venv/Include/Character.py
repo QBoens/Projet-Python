@@ -356,7 +356,7 @@ class Monster(Character):
         super().__init__(name)
         self.set_stat()
         self.add_loot()
-        self.display = ""
+
 
 
     def add_loot(self):
@@ -388,7 +388,7 @@ class Monster(Character):
             self.inventory.add_object(object)
 
     def show(self):
-        return self.display
+        return self.stat.display
 
     def load(self, nom, level_player):
         """
@@ -411,7 +411,11 @@ class Monster(Character):
                 break
 
             if(attr[0] != "damage"):
-                self.stat.__setattr__(attr[0], data[nom][attr[0]])
+                if(attr[0] == "display" and type(self)=="Monster"):
+                    self.stat.__setattr__(attr[0], data[nom][attr[0]])
+                else:
+                    continue
+
             else:
                 dmg_inf = data[nom]["damage_inf"]
                 dmg_sup = data[nom]["damage_sup"]
@@ -442,6 +446,7 @@ class Monster(Character):
 
         """Récupére les informations"""
         list_attr = self.stat.__dict__.items()
+
         for attr in list_attr:
             if (attr[0] == "level"):
                 break
@@ -515,6 +520,7 @@ class Statistic():
         self.parry = randint(25, 75)
         self.critical = randint(1, 101)
         self.damage = (1, 20)
+        self.display = ""
         self.level = 1
         self.nextLevel = 10
         self.addExp = 10
