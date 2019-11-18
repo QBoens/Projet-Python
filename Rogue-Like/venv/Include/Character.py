@@ -387,7 +387,8 @@ class Monster(Character):
                 a = 1
             self.inventory.add_object(object)
 
-
+    def show(self):
+        return self.display
 
     def load(self, nom, level_player):
         """
