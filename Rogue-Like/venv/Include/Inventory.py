@@ -238,10 +238,15 @@ class Inventory():
         """Fonction pour équiper un objet possédé"""
         if len(self.list_objects) == 0:
             return 0
+
         list_equip = self.list_equipment_possible()
+        if len(list_equip) == 0:
+            return 0
+
         print("Vous pouvez vous équiper des objets suivant :")
         indice = 1
         choix_possibles = list()
+
         for equip in list_equip:
             print('-------------',indice,'-------------')
             print(equip)
