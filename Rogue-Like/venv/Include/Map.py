@@ -78,7 +78,7 @@ class Map():
         while(len(buffer) != 0):
             for i in range(0,buffer[0][1]):
                 intro_line = intro_lines[random.randint(0,len(intro_lines)-1)]
-                if(random.randint(0,100) <= 70):
+                if(random.randint(0,100) <= 75):
                     monster = "monster"
                 else:
                     monster = ""
@@ -188,14 +188,14 @@ class Map():
                     monster = Monster()
                     player_Turn = True
                     code = 3
-                    while(monster.is_dead() == False and self.Player.is_dead() == False):
-                        if(player_Turn):
+                    while(monster.is_dead() == False and self.Player.is_dead() == False): #WHILE THE FIGHT ISN'T OVER LOOP
+                        if(player_Turn):                     #PLAYER TURN
                             Input = ""
                             self.Print_PlayerStat()
                             print(str(monster.nom)+"\nLVL: "+str(monster.get_level())+"\nHP: "+str(monster.get_HP())+"/"+str(monster.get_MaxHP())+"\n\n"+str(monster.show()))
                             self.Slow_Display("What do you want to do ?")
                             print("\n1: Slam\n2: Furious Slash\n3: Estoc\n4: Bladestorm\n5: Fireball\n6: Lightning\n7: Ice Spear\n8: Earth Fist")
-                            while(Input != "1" and Input != "2" and Input != "3" and Input != "4" and Input != "5" and Input != "6" and Input != "7" and Input != "8"):
+                            while(Input != "1" and Input != "2" and Input != "3" and Input != "4" and Input != "5" and Input != "6" and Input != "7" and Input != "8"): #CHOOSE SPELL
                                 Input = input("\n> ")
                                 if(Input != "1" and Input != "2" and Input != "3" and Input != "4" and Input != "5" and Input != "6" and Input != "7" and Input != "8"):
                                     os.system("cls")
@@ -240,7 +240,7 @@ class Map():
                             time.sleep(1)
                             os.system("cls")
                             player_Turn = False
-                        else:
+                        else:                       #MONSTER TURN
                             player_Turn = True
                             code = monster.attack_phy("",self.Player)
                             os.system("cls")
@@ -257,18 +257,18 @@ class Map():
                                 self.Slow_Display("YOU DIDN'T TAKE DAMAGE")
                             time.sleep(1)
                             os.system("cls")
-                    if(monster.is_dead()):
+                    if(monster.is_dead()):             #CHECK IF MONSTER IS DEAD
                         self.Player.get_loot(monster)
                         self.Player.getExp()
                         self.Rooms[self.PlayerPosition].Character = ""
                         player_Turn = True
                         os.system("cls")
-                    else:
+                    else:                             #CHECK IF CHARACTER IS DEAD
                         os.system("cls")
                         self.Player.revive() #REVIVE THE PLAYER
                         self.Generate() #CREATE A NEW DUNGEON
                         Input = ""
-                        while(Input != "1" and Input != "2"):
+                        while(Input != "1" and Input != "2"):     #GAME OVER MENU
                             os.system("cls")
                             self.Slow_Display("GAME OVER")
                             print("")
@@ -284,10 +284,10 @@ class Map():
                             os.system("cls")
                             break
                     Input = ""
-                self.Print_PlayerStat()
+                self.Print_PlayerStat()                      
                 self.Slow_Display("What do you want to do ?")
                 print("\n1: Inventory\n2: Potion\n3: Move to the next room\n4: Exit game")
-                while(Input != "3" and Input != "4"):
+                while(Input != "3" and Input != "4"):               #IF PLAYER IS ALIVE AND MONSTER IS DEAD MENU
                     Input = input("\n> ")
                     if(Input == "1"):
                         os.system("cls")
@@ -318,7 +318,7 @@ class Map():
             else:      #IF THERE IS NO MONSTER
                 self.Slow_Display("What do you want to do ?")
                 print("\n1: Inventory\n2: Potion\n3: Move to the next room\n4: Exit game")
-                while(Input != "3" and Input != "4"):
+                while(Input != "3" and Input != "4"):          #MENU
                     Input = input("\n> ")
                     if(Input == "1"):
                         os.system("cls")
@@ -373,7 +373,7 @@ class Map():
                 Input = ""
             elif(len(self.Rooms[self.PlayerPosition].get_NextRooms()) == 1):
                 self.PlayerPosition = self.Rooms[self.PlayerPosition].get_NextRooms()[0][0]
-            else:
+            else:                #DUNGEON IS FINISHED
                 os.system("cls")
                 self.Generate() #CREATE A NEW DUNGEON
                 Input = ""
