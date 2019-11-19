@@ -11,8 +11,8 @@ INTRODUCTIONLINES_PATH = "./IntroductionLine/"
 
 class Room():
     def __init__(self, ID,Character,Activable,IntroductionLine):
-        self.ID = ID
-        self.Character = Character #Name of the character
+        self.ID = ID #ID of the Room
+        self.Character = Character #Name of the monster presence
         self.Activable = Activable #Name of the activable
         self.IntroductionLine = IntroductionLine   #Name of the introduction line
         self.NextRooms = [] #index of the next rooms
@@ -62,7 +62,7 @@ class Map():
         for i in txt:
             print(i, end='')
             sys.stdout.flush()
-            time.sleep(0.05)
+            time.sleep(0.04)
         print("")
 
     #Generates the dungeon
@@ -236,7 +236,7 @@ class Map():
                             elif(code == 1):
                                 self.Slow_Display(str(monster.nom)+" COUNTERED YOUR ATTACK")
                             elif(code == 0):
-                                self.Slow_Display(str(monster.nom)+" TOOK NO DAMAGE")
+                                self.Slow_Display(str(monster.nom)+" DIDN'T TAKE DAMAGE")
                             time.sleep(1)
                             os.system("cls")
                             player_Turn = False
@@ -246,6 +246,7 @@ class Map():
                             os.system("cls")
                             self.Print_PlayerStat()
                             print(str(monster.nom)+"\nLVL: "+str(monster.get_level())+"\nHP: "+str(monster.get_HP())+"/"+str(monster.get_MaxHP())+"\n\n"+str(monster.show()))
+                            self.Slow_Display(str(monster.nom)+" ATTACKED")
                             if(code == 3):
                                 self.Slow_Display("YOU TOOK DAMAGE")
                             elif(code == 2):
@@ -253,7 +254,7 @@ class Map():
                             elif(code == 1):
                                 self.Slow_Display("YOU COUNTER THE ATTACK")
                             elif(code == 0):
-                                self.Slow_Display("YOU TOOK NO DAMAGE")
+                                self.Slow_Display("YOU DIDN'T TAKE DAMAGE")
                             time.sleep(1)
                             os.system("cls")
                     if(monster.is_dead()):
