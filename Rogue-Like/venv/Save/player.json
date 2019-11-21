@@ -1,1 +1,5 @@
+<<<<<<< Updated upstream
 {"nom": "Quentin", "stat": {"max_HP": 100, "HP": 100, "max_MP": 100, "MP": 100, "dodge": 20, "shield_point": 10, "parry": 65, "critical": 58, "damage": [1, 20], "display": "", "level": 1, "nextLevel": 10, "addExp": 10, "xpBar": 10, "bonus_stat": [], "armor": 10, "games_finished": 0, "games_played": 0, "biome_disc": 0, "mons_kills": 0, "weapon_found": 0, "armor_found": 0, "type_proprio": "Joueur"}}
+=======
+{"nom": "Link", "stat": {"max_HP": 160, "HP": 132, "max_MP": 160, "MP": 96, "dodge": 21, "shield_point": 15, "parry": 32, "critical": 82, "damage": [1, 32], "display": "", "level": 2, "nextLevel": 40, "addExp": 16, "xpBar": 24, "bonus_stat": [], "armor": 10, "games_finished": 0, "games_played": 0, "biome_disc": 0, "mons_kills": 0, "weapon_found": 0, "armor_found": 0, "type_proprio": "Joueur"}}
+>>>>>>> Stashed changes

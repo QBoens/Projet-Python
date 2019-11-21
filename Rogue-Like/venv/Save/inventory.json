@@ -1,1 +1,5 @@
+<<<<<<< Updated upstream
 {"objet": {}, "weapon": {"Gauche": 0, "Droite": 0}, "armor": {}}
+=======
+{"objet": {"Epee courte": {"gold_price": 20, "lvl": 1, "dg_bonus": 22, "Classe": "Weapon"}}, "weapon": {"Epee courte": {"gold_price": 20, "lvl": 2, "dg_bonus": 49, "Classe": "Weapon"}}, "armor": {}}
+>>>>>>> Stashed changes
