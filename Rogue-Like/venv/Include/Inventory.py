@@ -258,18 +258,20 @@ class Inventory():
             print(equip)
             choix_possibles.append(str(indice))
             indice += 1
-
+        choix_possibles.append("quit")
         choix_valide = False
-        texte = "Quel equipement choisissez vous?"
-        texte += "\nEntrez le numéro\n"
+        texte = "Which item do you want to equip?"
+        texte += "\nWrite the number, or quit"
 
         while not choix_valide:
             choix = input(texte)
-            if not choix in choix_possibles:
-                print("Choix non valide")
+            if not choix.lower() in choix_possibles:
+                print("Invalide choice")
 
             else:
                 choix_valide = True
+                if choix.lower() == "quit":
+                    return 0
                 if(type(list_equip[int(choix) - 1]).__name__ == "Armor"):
                     self.equip_armor(list_equip[int(choix) - 1])
                     return 0
@@ -279,19 +281,19 @@ class Inventory():
 
         choix_valide = False
 
-        texte = "Main droite ou gauche?"
-        texte += "\nG - Gauche\tD - Droite\n"
+        texte = "Right or left hand?"
+        texte += "\nL - Left\tR - Right\n"
 
         while not choix_valide:
             choix = input(texte)
-            if (choix.upper() != 'G' and choix.upper() != 'D'):
-                print("Choix non valide")
+            if (choix.upper() != 'L' and choix.upper() != 'R'):
+                print("Invalid choice")
 
-            elif choix.upper() == 'D':
+            elif choix.upper() == 'R':
                 self.equip_weapon_R(list_equip[arme_choisie - 1])
                 break
 
-            elif choix.upper() == 'G':
+            elif choix.upper() == 'L':
                 self.equip_weapon_G(list_equip[arme_choisie - 1])
                 break
 
