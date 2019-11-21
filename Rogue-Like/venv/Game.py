@@ -7,14 +7,14 @@ TITLE = " ______    _______  _______  __   __  _______    _______  __    _  ____
 
 if __name__ == "__main__":
     os.system("cls")
-    player = Joueur("Link")
-    map = Map(player)
     Input = ""
     print(TITLE+"\n\n\n1: New Game\n2: Load Game\n3: Quit")
     while(Input != "3"):
         Input = input("\n> ")
         os.system("cls")
         if(Input == "1"):
+            player = Joueur("Link")
+            map = Map(player)
             map.Generate()
             map.Play()
             map.Save()
@@ -31,6 +31,8 @@ if __name__ == "__main__":
                 if(list_dir[i] == "map.json"):
                     Map_load = True
             if(Player_load == True and Map_load == True):
+                player = Joueur("Link")
+                map = Map(player)
                 player.load()
                 map = Map(player)
                 map.Load()
