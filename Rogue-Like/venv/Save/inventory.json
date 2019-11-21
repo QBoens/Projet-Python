@@ -1,5 +1,9 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 {"objet": {}, "weapon": {"Gauche": 0, "Droite": 0}, "armor": {}}
 =======
 {"objet": {"Epee courte": {"gold_price": 20, "lvl": 1, "dg_bonus": 22, "Classe": "Weapon"}}, "weapon": {"Epee courte": {"gold_price": 20, "lvl": 2, "dg_bonus": 49, "Classe": "Weapon"}}, "armor": {}}
+>>>>>>> Stashed changes
+=======
+{"objet": {"Potion for HP": {"gold_price": 100, "stat": "HP", "value": 48, "Classe": "Potion"}}, "weapon": {"Epee longue": {"gold_price": 30, "lvl": 3, "dg_bonus": 100, "Classe": "Weapon"}, "Droite": 0}, "armor": {"Leather plastron": {"gold_price": 10, "lvl": 1, "df_bonus": 7, "type": 2, "Classe": "Armor"}}}
 >>>>>>> Stashed changes
