@@ -261,7 +261,7 @@ class Inventory():
         choix_possibles.append("quit")
         choix_valide = False
         texte = "Which item do you want to equip?"
-        texte += "\nWrite the number, or quit"
+        texte += "\nWrite the number, or quit\n\n> "
 
         while not choix_valide:
             choix = input(texte)
@@ -281,8 +281,8 @@ class Inventory():
 
         choix_valide = False
 
-        texte = "Right or left hand?"
-        texte += "\nL - Left\tR - Right\n"
+        texte = "Right or left hand ?"
+        texte += "\nL - Left\tR - Right\n\n> "
 
         while not choix_valide:
             choix = input(texte)
