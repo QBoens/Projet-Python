@@ -186,6 +186,7 @@ class Map():
                     os.system("cls")
                     Input = ""
                     monster = Monster()
+                    monster.set_level(self.Player.get_level())
                     player_Turn = True
                     code = 3
                     while(monster.is_dead() == False and self.Player.is_dead() == False): #WHILE THE FIGHT ISN'T OVER LOOP
