@@ -25,12 +25,15 @@ if __name__ == "__main__":
             list_dir = os.listdir(SAVE_PATH)
             Player_load = False
             Map_load = False
+            Inventory_Load = False
             for i in range(0,len(list_dir)):
                 if(list_dir[i] == "player.json"):
                     Player_load = True
                 if(list_dir[i] == "map.json"):
                     Map_load = True
-            if(Player_load == True and Map_load == True):
+                if(list_dir[i] == "inventory.json"):
+                    Inventory_Load = True
+            if(Player_load == True and Map_load == True and Inventory_Load == True):
                 player = Joueur("Link")
                 map = Map(player)
                 player.load()
