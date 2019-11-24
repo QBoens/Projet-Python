@@ -4,12 +4,13 @@ import os
 
 SAVE_PATH = "./Save"   #SAVE FOLDER
 TITLE = " ______    _______  _______  __   __  _______    _______  __    _  _______ \n|    _ |  |       ||       ||  | |  ||       |  |       ||  |  | ||       |\n|   | ||  |   _   ||    ___||  | |  ||    ___|  |   _   ||   |_| ||    ___|\n|   |_||_ |  | |  ||   | __ |  |_|  ||   |___   |  | |  ||       ||   |___ \n|    __  ||  |_|  ||   ||  ||       ||    ___|  |  |_|  ||  _    ||    ___|\n|   |  | ||       ||   |_| ||       ||   |___   |       || | |   ||   |___ \n|___|  |_||_______||_______||_______||_______|  |_______||_|  |__||_______|"
+TITLE2 = "  _                    _            _                     _                     _   _       \n | |__ _  _   __ _ _ _| |_ ___ _ _ (_)_ _    __ _ _ _  __| |  __ _ _  _ ___ _ _| |_(_)_ _   \n | '_ \ || | / _` | ' \  _/ _ \ ' \| | ' \  / _` | ' \/ _` | / _` | || / -_) ' \  _| | ' \  \n |_.__/\_, | \__,_|_||_\__\___/_||_|_|_||_| \__,_|_||_\__,_| \__, |\_,_\___|_||_\__|_|_||_| \n       |__/                                                     |_|                        "
 
 #Main function of the Game containing the menu
 if __name__ == "__main__":
     os.system("cls")
     Input = ""
-    print(TITLE+"\n\n\n1: New Game\n2: Load Game\n3: Quit")
+    print(TITLE+"\n"+TITLE2+"\n\n\n1: New Game\n2: Load Game\n3: Quit")
     while(Input != "3"):
         Input = input("\n> ")
         os.system("cls")
@@ -21,7 +22,7 @@ if __name__ == "__main__":
             map.Save()
             os.system("cls")
             Input = ""
-            print(TITLE+"\n\n\n1: New Game\n2: Load Game\n3: Quit")
+            print(TITLE+"\n"+TITLE2+"\n\n\n1: New Game\n2: Load Game\n3: Quit")
         elif(Input == "2"):       #CHOICE: LOAD A NEW GAME FROM FILES
             list_dir = os.listdir(SAVE_PATH)
             Player_load = False
@@ -44,13 +45,13 @@ if __name__ == "__main__":
                 map.Save()
                 os.system("cls")
                 Input = ""
-                print(TITLE+"\n\n\n1: New Game\n2: Load Game\n3: Quit")
+                print(TITLE+"\n"+TITLE2+"\n\n\n1: New Game\n2: Load Game\n3: Quit")
             else:
                 Input = ""
-                print(TITLE+"\n\n\n1: New Game\n2: Load Game\n3: Quit")
+                print(TITLE+"\n"+TITLE2+"\n\n\n1: New Game\n2: Load Game\n3: Quit")
                 print("\nNo save file was found")
         elif(Input == "3"):                  #CHOICE: QUIT
             print("Bye, thank you for playing! :)")
         else:                             #BAD CHOICE
             Input = ""
-            print(TITLE+"\n\n\n\n1: New Game\n2: Load Game\n3: Quit")
+            print(TITLE+"\n"+TITLE2+"\n\n\n1: New Game\n2: Load Game\n3: Quit")
